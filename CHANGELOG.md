@@ -1,13 +1,10 @@
 # Changelog
 
-## v24.0 — Official Community Release candidate
-- Established v24 as the single user-facing engine on `main`.
-- Added/kept GAME READY session workflow.
-- Added/kept hardware-aware detection and Free Fire recommendations.
-- Added/kept recovery baseline and restore workflow.
-- Added/kept conflict checks, reboot status and benchmark snapshots.
-- Kept experimental settings separate from the normal gaming path.
-- Removed obsolete v13-v23 engine files from the main user-facing tree.
-
-## Development history
-Earlier experimental builds remain available through Git history when needed for auditing or development. They are not shipped from `main`.
+## v24.0
+- Official Community Release Candidate.
+- Consolidated the public working tree to one user-facing engine.
+- Removed legacy v13-v23 engine files from `main`.
+- Removed legacy language-pack files from `main` except the v24 pack used by the engine.
+- Kept recovery-first baseline and restore architecture.
+- Kept hardware-aware recommendations and BlueStacks / Free Fire profiles.
+- Kept GAME READY session workflow, verified Maximum FPS power-plan logic, ping/jitter, conflict checks, reboot detection, and benchmark snapshots.

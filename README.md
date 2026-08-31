@@ -1,43 +1,38 @@
 # KXM BlueFire
 
-**Hardware-aware Windows gaming optimizer for GGOS / BlueStacks / Free Fire.**
+Hardware-aware Windows gaming optimizer for GGOS / BlueStacks / Free Fire.
 
-## Official release
+## v24 — Official Community Release Candidate
 
-**v24 — Community Release candidate**
+The `main` branch intentionally contains one user-facing engine only: **KXM BlueFire v24**.
 
-The repository intentionally keeps **one public engine** on `main` so users do not accidentally launch an obsolete development build.
+### Core features
 
-### Main features
-
-- **GAME READY session mode**: prepares a gaming session with safe cleanup, DNS refresh, High Performance power plan and BlueStacks process preparation.
-- **Session restore**: returns session-only settings such as the previous power plan when the session ends.
-- **Hardware-aware detection**: CPU, RAM, GPU, virtualization and HDD/SSD detection with fallback logic for older systems.
-- **Free Fire profile**: 4 CPU cores + 4 GB RAM + High Performance as the default BlueStacks target; 120 FPS is the recommended target and 240 FPS is only an optional ceiling, not a guarantee.
-- **Conflict detection**: checks for common software/virtualization conditions that may affect aggressive tuning.
-- **Before/after snapshots**: records measurable system state without inventing FPS results.
-- **Pending reboot detection**: flags Windows states that commonly require a restart.
-- **Recovery baseline**: stored outside the portable app under `C:\ProgramData\KXM\BlueFire\Backups`.
-- **Restore**: restores KXM-managed settings captured before its first modification.
-- **Experimental Lab**: advanced settings remain separate and opt-in.
-- **Multilingual UI**: English / العربية / Français.
+- Hardware-aware CPU / RAM / GPU / HDD / SSD detection.
+- Free Fire profile guidance: 4 CPU cores + 4 GB RAM, High Performance power, 120 FPS recommended; 240 FPS is an optional ceiling, not a performance guarantee.
+- GAME READY session mode for pre-game cleanup and session performance settings.
+- Recovery-first baseline stored outside the portable application under `C:\ProgramData\KXM\BlueFire\Backups`.
+- Restore of KXM-managed settings captured before modification.
+- Verified KXM Maximum FPS power-plan workflow.
+- Ping / jitter testing.
+- Conflict and dependency checks.
+- Pending-reboot detection.
+- Before / after system snapshots without inventing FPS results.
+- Experimental options kept separate from the normal gaming path.
+- English / Arabic / French UI support.
 
 ## Safety policy
 
-Normal KXM profiles do not disable Defender or Windows Update, disable the Windows pagefile, disable memory compression, inject DLLs, modify game files, or bypass anti-cheat protections.
-
-## Compatibility
-
-The GUI targets Windows PowerShell 5.1 and Windows Forms. The repository includes a Windows CI workflow that parses PowerShell with Windows PowerShell 5.1 so syntax regressions can be caught before release.
+KXM does not make aggressive system removals part of the normal profile. It does not intentionally disable Defender or Windows Update, disable the Windows pagefile, force HPET, blindly force MSI mode, inject DLLs, modify game files, or bypass anti-cheat.
 
 ## Usage
 
-1. Download/clone the repository.
-2. Run `KXM_BLUEFIRE.bat` as Administrator.
-3. Use **Hardware Audit** first.
-4. Use **Smart Optimize** for a persistent profile or **GAME READY** for a quick gaming session.
-5. Use **Restore Original** when you want to return KXM-managed settings to the captured pre-KXM state.
+Run `KXM_BLUEFIRE.bat` as Administrator. Start with the hardware audit, review the recommendation, and create/verify a recovery baseline before system-changing profiles.
+
+Use **GAME READY** for the lightweight pre-game session workflow.
 
 ## Repository policy
 
-Development builds are not kept in the root of `main`. Historical development work belongs in Git history, branches or Releases—not in the main user-facing download path.
+Old development engine files are intentionally removed from the public working tree. They remain available through Git history if needed for development archaeology.
+
+The repository includes a Windows CI workflow that checks PowerShell syntax so broken parser builds do not become release candidates.
