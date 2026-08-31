@@ -1,4 +1,4 @@
-# KXM BlueFire v25
+# KXM BlueFire v26
 
 **Hardware-aware Windows gaming performance platform for BlueStacks / Free Fire.**
 
@@ -14,57 +14,87 @@ This repository is the **public Windows client** for KXM BlueFire.
 
 The public client contains no privileged Supabase secret and no private dashboard/server implementation.
 
-## v25 highlights
+## v26 RC1 highlights
 
-- **Session Undo**: GAME READY saves the previous power state and supports `UNDO LAST SESSION`.
-- **Thermal Guard**: reads available Windows ACPI thermal telemetry and returns `SAFE`, `WARNING`, `THROTTLING RISK`, or `UNKNOWN`.
+- **Recovery-first baseline**: persistent changes use a baseline snapshot stored under `C:\ProgramData\KXM\BlueFire\Backups\` before changes.
+- **Restore Original**: restores captured registry values, removes values that were absent before KXM, restores captured service state, and returns to the original power plan when it still exists.
+- **Session Undo**: GAME READY stores session power and BlueStacks process-priority state and can restore it.
+- **Hardware-aware recommendations**: CPU, RAM, storage, and SysMain policy are evaluated before a profile is proposed.
+- **Thermal Guard**: reads available Windows ACPI thermal telemetry and returns `SAFE`, `WARNING`, `THROTTLING RISK`, or `UNKNOWN` without inventing readings.
 - **Driver Health**: reads display-driver provider, version and date.
-- **Windows Update Resilience**: checks important KXM values for drift and reports pending reboot state.
-- **Dynamic Free Fire profile**: hardware-aware 4-core / 4-GB baseline with safe downscaling on smaller systems.
-- **120 FPS recommended / 240 FPS ceiling**: configuration targets, not guarantees of rendered FPS.
-- **Network diagnostics**: gateway/public endpoint latency and jitter tools.
-- **Frame-time preparation**: detects PresentMon when available and keeps measurement provenance explicit.
-- **Conflict checks**: Discord / RTSS / Hyper-V style conflicts are surfaced before sensitive work.
+- **Windows Update Resilience**: reports pending reboot state and drift in tracked KXM policy values.
+- **Network diagnostics**: gateway and public endpoint latency plus jitter measurements.
+- **Frame-time preparation**: detects PresentMon when available and never invents FPS or frame-time results.
 - **Profile export**: portable JSON profile snapshots.
-- **Community Insights**: opt-in, privacy-first, coarse hardware classes + operation outcomes.
-- **Arabic RTL**, English and French UI.
+- **Community telemetry**: OFF by default, coarse and privacy-first, with a local queue and explicit opt-in.
+- **English / Arabic / French** UI with Arabic RTL.
 
-## Free Fire policy
+## Recommendation model
 
-When hardware can support it, KXM recommends **4 CPU cores + 4 GB RAM** for the emulator and **High Performance** power policy. On smaller systems it scales down rather than forcing the same values everywhere.
+KXM does **not** force one BlueStacks allocation onto every machine.
 
-For HDD or systems with 8 GB RAM or less, KXM keeps **SysMain AUTO**.
+The safe recommendation model scales with detected CPU cores and physical RAM, then considers storage class for the profile tier. For HDD systems or systems with 8 GB RAM or less, KXM keeps **SysMain AUTO**.
 
-## Safety
+The default guidance is a target, not a promise of rendered FPS:
 
-KXM's safe path does not intentionally:
+- **120 FPS target** for supported profiles.
+- **240 FPS ceiling** as an optional emulator setting where the game/emulator/display actually supports it.
+
+## Safety boundary
+
+KXM's normal path does not intentionally:
+
 - disable Defender;
 - disable Windows Update;
 - disable the pagefile;
 - force HPET;
-- force MSI mode blindly;
+- force blind MSI mode;
 - remove Edge/WebView2;
 - modify game files;
 - inject DLLs or bypass anti-cheat;
 - purge large groups of Windows services.
 
-Experimental changes must remain explicitly gated and benchmarked.
+Experimental changes must remain explicitly gated, previewed, benchmarked, and reversible.
 
-## Recovery
+## Recovery model
 
-Persistent configuration changes use a baseline outside the portable folder:
+The baseline is **targeted configuration recovery**, not a complete disk image.
+
+Before persistent changes, KXM captures the settings it owns, including tracked Registry values, the current active power plan, and tracked service state.
+
+The current baseline pointer is stored at:
+
+`C:\ProgramData\KXM\BlueFire\CURRENT_BASELINE.txt`
+
+Baseline snapshots are stored under:
 
 `C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
 
-GAME READY session state is stored under:
+Session snapshots are stored under:
 
 `C:\ProgramData\KXM\BlueFire\Sessions`
 
-This is configuration recovery, **not** a full disk image.
+A Windows System Restore point may also be attempted when supported. Its availability is reported; it is not treated as a replacement for KXM's own targeted baseline.
 
 ## Community data
 
-Community sharing is **OFF by default**. Only coarse hardware classes and operation outcomes are intended to be collected. The public client contains no privileged Supabase secret. Online sending is mediated by the private project backend.
+Community sharing is **OFF by default**.
+
+The telemetry module is designed to use coarse hardware classes and operation outcomes. It excludes names, usernames, passwords, tokens, documents, game account IDs, serial numbers, MAC addresses, registry dumps, file contents, and secret keys.
+
+Online delivery is mediated by the private project backend.
+
+## Validation
+
+GitHub Actions validates the PowerShell project on Windows with:
+
+- Windows PowerShell 5.1 parser validation;
+- PSScriptAnalyzer;
+- launcher-target validation;
+- hardware recommendation regression tests;
+- deterministic Registry restore regression coverage.
+
+A release is not considered stable solely because CI is green. Real-device compatibility testing is required.
 
 ## Compatibility
 
@@ -73,8 +103,19 @@ Community sharing is **OFF by default**. Only coarse hardware classes and operat
 - Administrator rights for system-changing functions
 - BlueStacks optional
 
-## Status
+## Release status
 
-**v25.0 — Reliability / Measurement release candidate**
+**v26.0-rc.1 — Release Candidate**
 
-Stable release requires real-device compatibility reports across Intel / AMD / NVIDIA, HDD / SSD / NVMe and multiple RAM tiers.
+This is a pre-release build. It is intended for compatibility testing and controlled feedback, not as a claim that every Windows configuration is supported.
+
+Before a stable release, validate real devices across:
+
+- Intel / AMD CPUs
+- integrated / discrete graphics
+- HDD / SSD / NVMe
+- multiple RAM tiers
+- Windows 10 / Windows 11
+- BlueStacks versions and configurations
+
+See `CHANGELOG.md`, `TROUBLESHOOTING.md`, `SECURITY.md`, and `SUPABASE_SETUP.md` for additional details.
