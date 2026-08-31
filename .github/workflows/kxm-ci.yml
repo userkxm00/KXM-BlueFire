@@ -1,0 +1,67 @@
+name: KXM BlueFire CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate all PowerShell 5.1 syntax
+        shell: powershell
+        run: |
+          $files = Get-ChildItem -Path . -Filter '*.ps1' -File -Recurse
+          $failed = $false
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$tokens, [ref]$errors)
+            if ($errors.Count -gt 0) {
+              $failed = $true
+              Write-Host "SYNTAX FAIL: $($file.FullName)" -ForegroundColor Red
+              foreach ($err in $errors) {
+                Write-Host "Line $($err.Extent.StartLineNumber): $($err.Message)" -ForegroundColor Red
+              }
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Install PSScriptAnalyzer
+        shell: powershell
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+
+      - name: Run PSScriptAnalyzer
+        shell: powershell
+        run: |
+          $errors = @()
+          foreach ($file in @(Get-ChildItem -Path . -Filter '*.ps1' -File -Recurse)) {
+            $errors += @(Invoke-ScriptAnalyzer -Path $file.FullName -Severity Error)
+          }
+          if ($errors.Count -gt 0) {
+            $errors | Format-Table -AutoSize | Out-String | Write-Host
+            exit 1
+          }
+
+      - name: Validate launcher and runtime files
+        shell: powershell
+        run: |
+          $bat = Get-Content .\KXM_BLUEFIRE.bat -Raw
+          if ($bat -notmatch 'KXM_BLUEFIRE\.ps1') { throw 'Launcher does not target KXM_BLUEFIRE.ps1' }
+          foreach ($file in @('KXM_LANG.json','KXM_TELEMETRY.ps1','KXM_SUPABASE_CONFIG.json','KXM_CONFIG.ini','LICENSE','README.md')) {
+            if (-not (Test-Path $file)) { throw "Missing required project file: $file" }
+          }
+
+      - name: Run regression suite
+        shell: powershell
+        run: .\tests\KXM.BlueFire.Tests.ps1
+
+      - name: Check version metadata
+        shell: powershell
+        run: |
+          $v = (Get-Content VERSION -Raw).Trim()
+          if ($v -notmatch '^\d+\.\d+\.\d+-(rc\.\d+|beta\.\d+|alpha\.\d+)$') { throw "Invalid VERSION: $v" }
