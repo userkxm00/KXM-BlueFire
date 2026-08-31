@@ -1,0 +1,101 @@
+name: Release KXM BlueFire
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout exact tagged source
+        uses: actions/checkout@v4
+
+      - name: Validate PowerShell 5.1 source
+        shell: powershell
+        run: |
+          $files = Get-ChildItem -Path . -Filter '*.ps1' -File -Recurse
+          $failed = $false
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$tokens, [ref]$errors)
+            if ($errors.Count -gt 0) {
+              $failed = $true
+              Write-Host "SYNTAX FAIL: $($file.FullName)" -ForegroundColor Red
+              foreach ($err in $errors) {
+                Write-Host "Line $($err.Extent.StartLineNumber): $($err.Message)" -ForegroundColor Red
+              }
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Build runtime package
+        shell: powershell
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $root = Join-Path $env:RUNNER_TEMP "KXM-BlueFire-$tag"
+          $zip = Join-Path $env:GITHUB_WORKSPACE "KXM-BlueFire-$tag.zip"
+          if (Test-Path $root) { Remove-Item $root -Recurse -Force }
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          $files = @(
+            'KXM_BLUEFIRE.bat',
+            'KXM_BLUEFIRE.ps1',
+            'KXM_LANG.json',
+            'KXM_TELEMETRY.ps1',
+            'KXM_SUPABASE_CONFIG.json',
+            'KXM_CONFIG.ini',
+            'README.md',
+            'LICENSE'
+          )
+
+          foreach ($file in $files) {
+            if (-not (Test-Path $file)) { throw "Missing runtime file: $file" }
+            Copy-Item $file -Destination (Join-Path $root $file) -Force
+          }
+
+          $manifest = [ordered]@{
+            tag = $tag
+            commit = '${{ github.sha }}'
+            generated_utc = (Get-Date).ToUniversalTime().ToString('o')
+            runtime_files = $files
+          }
+          $manifest | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $root 'RELEASE-MANIFEST.json') -Encoding UTF8
+
+          Compress-Archive -Path (Join-Path $root '*') -DestinationPath $zip -Force
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zip).Hash.ToLowerInvariant()
+          "$hash  $(Split-Path $zip -Leaf)" | Set-Content (Join-Path $env:GITHUB_WORKSPACE 'SHA256SUMS.txt') -Encoding ASCII
+
+      - name: Create GitHub release and upload assets
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $zip = "KXM-BlueFire-$tag.zip"
+          $notes = @"
+          # KXM BlueFire $tag
+
+          Release candidate generated from the exact tagged source.
+
+          ## Safety
+          - Recovery-first baseline before persistent changes.
+          - Restore capability is part of the release path.
+          - Community telemetry is OFF by default.
+          - No intentionally disabled Defender or Windows Update.
+          - No game-file modification, DLL injection, or anti-cheat bypass.
+
+          ## Compatibility
+          - Windows 10 / Windows 11
+          - Windows PowerShell 5.1
+          - Administrator rights for system-changing operations
+
+          This release is a candidate for compatibility testing. It does not guarantee FPS improvement on every system.
+          "@
+          Set-Content -Path release-notes.md -Value $notes -Encoding UTF8
+          gh release create $tag $zip SHA256SUMS.txt --title "KXM BlueFire $tag" --notes-file release-notes.md --prerelease
