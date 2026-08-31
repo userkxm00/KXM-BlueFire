@@ -2,23 +2,25 @@
 
 Hardware-aware Windows gaming optimizer for GGOS, BlueStacks and Free Fire.
 
-> **Recovery-first:** KXM is designed to capture the pre-change settings it owns before applying optimizations, so the user can restore them later.
+> **Recovery-first:** KXM creates a durable baseline of the settings it owns before the first system-changing action.
 
 ## Current release
 
-**v12.0**
+**v13.0**
 
 ## What KXM does
 
-- Hardware audit: CPU, threads, RAM, GPU, virtualization and storage type.
-- Smart recommendations based on detected hardware.
-- Recommended and Competitive performance profiles.
+- Read-only Self-Test.
+- Hardware Audit: CPU, threads, RAM, GPU, virtualization and HDD/SSD detection.
+- Smart recommendations before optimization.
+- Recommended and Competitive gaming profiles.
 - BlueStacks-focused tuning.
-- Network, storage and background optimization modules.
+- Network, storage and background modules.
 - Benchmark and verification tools.
 - Experimental lab kept separate from normal profiles.
 - English / العربية / Français UI.
-- PowerShell 5.1-compatible engine with a syntax gate in the BAT launcher.
+- Windows PowerShell 5.1-compatible engine.
+- BAT parser gate before the engine starts.
 
 ## Recovery / backup
 
@@ -26,13 +28,13 @@ Before the first system-changing action, KXM creates a baseline under:
 
 `C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
 
-The portable KXM folder is not the only copy. The baseline is stored in Windows ProgramData so deleting or moving the portable app does not remove the recovery data.
+The baseline is stored outside the portable KXM folder so moving or deleting the app folder does not remove the normal recovery copy.
 
-The baseline records the KXM-owned registry values it may change, selected service state/start mode, selected TCP values, BlueStacks GPU preference when detected, the active power scheme, a BCD export, and an attempted Windows restore point.
+The baseline records KXM-owned registry values, selected service startup/state, selected TCP values, the BlueStacks GPU preference when detected, the active power scheme, a BCD export, and an attempted Windows restore point.
 
 Use **R — Restore** to restore the captured pre-KXM state.
 
-> This is not a complete Windows disk image. It restores the settings captured by KXM before its changes. Personal files are not targeted by normal profiles.
+> This is not a full Windows system image. It restores the settings captured by KXM before its own changes. Personal files are not targeted by normal profiles.
 
 ## Recommended workflow
 
@@ -40,28 +42,18 @@ Use **R — Restore** to restore the captured pre-KXM state.
 2. Run Self-Test.
 3. Run Hardware Audit.
 4. Read the Smart Recommendation.
-5. Apply Recommended Profile or Competitive Profile.
+5. Apply Recommended or Competitive Profile.
 6. Reboot.
 7. Benchmark and Verify.
-8. Use Restore if you want to undo KXM changes.
+8. Use Restore when you want to undo KXM changes.
 
 ## Compatibility
 
-Designed for Windows PowerShell 5.1 syntax. The launcher performs a PowerShell parser check before execution.
-
-The BAT launcher is ASCII-compatible. The PowerShell engine is UTF-8 for multilingual UI.
+The launcher validates the engine with the Windows PowerShell parser before execution. The BAT remains ASCII-compatible; the PowerShell engine is UTF-8.
 
 ## Safety policy
 
-Normal profiles intentionally avoid:
-
-- disabling Windows Defender or Windows Update;
-- disabling the Windows pagefile;
-- disabling memory compression;
-- forced MSI mode hacks;
-- forced HPET/platform-clock hacks;
-- game-file modification;
-- DLL injection or anti-cheat bypass.
+Normal profiles do not disable Defender or Windows Update, disable the pagefile, disable memory compression, force MSI mode, force HPET/platform-clock hacks, modify game files, inject DLLs, or bypass anti-cheat.
 
 Experimental options remain opt-in and should be benchmarked one at a time.
 
