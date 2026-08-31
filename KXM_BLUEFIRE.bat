@@ -9,14 +9,14 @@ if errorlevel 1 (
   exit /b
 )
 
-set "ENGINE=%~dp0KXM_BLUEFIRE_V24_GUI.ps1"
+set "ENGINE=%~dp0KXM_BLUEFIRE.ps1"
+set "LANG=%~dp0KXM_LANG_V24.json"
+
 if not exist "%ENGINE%" (
   echo [KXM] Missing engine: %ENGINE%
   pause
   exit /b 2
 )
-
-set "LANG=%~dp0KXM_LANG_V24.json"
 if not exist "%LANG%" (
   echo [KXM] Missing language file: %LANG%
   pause
