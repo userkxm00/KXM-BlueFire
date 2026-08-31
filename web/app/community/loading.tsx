@@ -1,0 +1,1 @@
+export default function Loading(){return <main className="page"><div className="shell"><div className="card" style={{padding:28}}><div className="kicker mono">LOADING COMMUNITY INTELLIGENCE</div><p className="muted">Preparing aggregated evidence…</p></div></div></main>}
