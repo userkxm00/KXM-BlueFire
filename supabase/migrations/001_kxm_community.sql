@@ -57,8 +57,7 @@ alter table public.community_insights enable row level security;
 alter table public.kxm_rate_limits enable row level security;
 
 create or replace function public.kxm_is_admin()
-returns boolean
-language sql stable security definer set search_path=public
+returns boolean language sql stable security definer set search_path=public
 as $$ select coalesce((auth.jwt()->'app_metadata'->>'role')='admin',false); $$;
 
 revoke all on public.kxm_telemetry_events from anon, authenticated;
@@ -79,31 +78,23 @@ select
   sum(sample_count)::int as sample_count,
   case when sum(sample_count)=0 then 0 else round(sum(success_count)::numeric/sum(sample_count),4) end as success_rate,
   case when sum(sample_count)=0 then 0 else round(sum(rollback_count)::numeric/sum(sample_count),4) end as rollback_rate,
-  case when sum(sample_count)<25 then 0 else least(1,numeric_greatest_zero((sum(positive_count)-sum(negative_count))::numeric/sum(sample_count))) end as confidence
+  case when sum(sample_count)<25 then 0 else least(1,greatest(0,(sum(positive_count)-sum(negative_count))::numeric/sum(sample_count))) end as confidence
 from public.community_insights
 group by hardware_key,game,profile
 having sum(sample_count)>=5;
 
--- Helper used by the view; avoids leaking negative confidence.
-create or replace function public.numeric_greatest_zero(v numeric)
-returns numeric language sql immutable as $$ select greatest(0,v); $$;
-
-revoke all on function public.numeric_greatest_zero(numeric) from public;
-grant execute on function public.numeric_greatest_zero(numeric) to authenticated;
 grant select on public.community_insights_public to authenticated;
 
 create or replace function public.kxm_consume_rate_limit(p_bucket_key text,p_bucket_day date,p_limit integer default 120)
-returns boolean
-language plpgsql security definer set search_path=public
+returns boolean language plpgsql security definer set search_path=public
 as $$
 declare n integer;
 begin
-  if p_limit < 1 or p_limit > 5000 then return false; end if;
-  insert into public.kxm_rate_limits(bucket_key,bucket_day,request_count)
-  values(left(p_bucket_key,128),p_bucket_day,1)
+  if p_limit<1 or p_limit>5000 then return false; end if;
+  insert into public.kxm_rate_limits(bucket_key,bucket_day,request_count) values(left(p_bucket_key,128),p_bucket_day,1)
   on conflict(bucket_key,bucket_day) do update set request_count=public.kxm_rate_limits.request_count+1,updated_at=now()
   returning request_count into n;
-  return n <= p_limit;
+  return n<=p_limit;
 end;
 $$;
 revoke all on function public.kxm_consume_rate_limit(text,date,integer) from public,anon,authenticated;
@@ -137,3 +128,17 @@ for each row execute function public.kxm_ingest_trigger();
 
 revoke all on function public.kxm_ingest_trigger() from public,anon,authenticated;
 grant execute on function public.kxm_ingest_trigger() to service_role;
+
+-- Admin summary is protected by the same JWT app_metadata role gate.
+create or replace function public.kxm_admin_summary()
+returns table(total_samples bigint,total_buckets bigint,positive_rate numeric,rollback_rate numeric)
+language sql stable security definer set search_path=public
+as $$
+  select coalesce(sum(sample_count),0),count(*),
+    case when coalesce(sum(sample_count),0)=0 then 0 else sum(positive_count)::numeric/sum(sample_count) end,
+    case when coalesce(sum(sample_count),0)=0 then 0 else sum(rollback_count)::numeric/sum(sample_count) end
+  from public.community_insights
+  where public.kxm_is_admin();
+$$;
+revoke all on function public.kxm_admin_summary() from public,anon;
+grant execute on function public.kxm_admin_summary() to authenticated;
