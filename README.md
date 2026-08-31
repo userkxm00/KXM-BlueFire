@@ -4,6 +4,12 @@
 
 > Detect -> Protect -> Recommend -> Preview -> Apply -> Measure -> Learn -> Restore
 
+## Repositories
+
+This is the **public Windows client** repository.
+
+The companion website, private admin dashboard, community analytics and privileged server-side integration live separately in **KXM-BlueFire-Web-**.
+
 ## v25 highlights
 
 - **Session Undo**: GAME READY saves the previous power state and supports `UNDO LAST SESSION`.
@@ -11,7 +17,7 @@
 - **Driver Health**: reads display-driver provider, version and date.
 - **Windows Update Resilience**: checks important KXM values for drift and reports pending reboot state.
 - **Dynamic Free Fire profile**: hardware-aware 4-core / 4-GB baseline with safe downscaling on smaller systems.
-- **120 FPS recommended / 240 FPS ceiling**: these are configuration targets, not guarantees of rendered FPS.
+- **120 FPS recommended / 240 FPS ceiling**: configuration targets, not guarantees of rendered FPS.
 - **Network diagnostics**: gateway/public endpoint latency and jitter tools.
 - **Frame-time preparation**: detects PresentMon when available and keeps measurement provenance explicit.
 - **Conflict checks**: Discord / RTSS / Hyper-V style conflicts are surfaced before sensitive work.
@@ -54,7 +60,7 @@ This is configuration recovery, **not** a full disk image.
 
 ## Community data
 
-Community sharing is **OFF by default**. Only coarse hardware classes and operation outcomes are intended to be collected. The default build has **no hidden telemetry destination**; online sending requires an explicit endpoint configured by the user.
+Community sharing is **OFF by default**. Only coarse hardware classes and operation outcomes are intended to be collected. The public client contains no privileged Supabase secret. Online sending is mediated by the project backend.
 
 ## Compatibility
 
