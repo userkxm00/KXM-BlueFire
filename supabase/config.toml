@@ -1,0 +1,7 @@
+project_id = "rpipqppuaaghiizpfgfd"
+
+[functions.kxm-telemetry]
+verify_jwt = false
+
+[functions.kxm-community-insights]
+verify_jwt = false
