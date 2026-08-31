@@ -1,61 +1,60 @@
 # KXM BlueFire
 
-Hardware-aware Windows gaming optimizer for GGOS, BlueStacks and Free Fire.
+**Hardware-aware gaming performance suite for GGOS / BlueStacks / Free Fire.**
 
-> **Recovery-first:** KXM creates a durable baseline of the settings it owns before the first system-changing action.
+## Current entry point
 
-## Current release
+Run **`KXM_BLUEFIRE.bat`** as Administrator. The launcher now starts the stable **v21 GUI**.
 
-**v13.0**
+## v21 highlights
 
-## What KXM does
+- Modern Windows GUI dashboard.
+- Hardware detection with HDD/SSD fallback using both `Get-PhysicalDisk` and `Win32_DiskDrive`.
+- Smart Free Fire profile targeting **4 CPU cores / 4 GB RAM / High Performance** when the hardware can support it.
+- 240 FPS is presented as an **optional ceiling target**, not a guaranteed FPS result.
+- **GAME READY** quick mode for daily play: safe temp cleanup, DNS flush, High Performance activation, BlueStacks detection, and session priority.
+- Smart Optimize for persistent KXM-owned performance settings.
+- Backup / Restore baseline stored outside the portable folder in `C:\ProgramData\KXM\BlueFire\Backups`.
+- English / العربية / Français with live language switching and RTL mode for Arabic.
+- Benchmark and Verify tools.
 
-- Read-only Self-Test.
-- Hardware Audit: CPU, threads, RAM, GPU, virtualization and HDD/SSD detection.
-- Smart recommendations before optimization.
-- Recommended and Competitive gaming profiles.
-- BlueStacks-focused tuning.
-- Network, storage and background modules.
-- Benchmark and verification tools.
-- Experimental lab kept separate from normal profiles.
-- English / العربية / Français UI.
-- Windows PowerShell 5.1-compatible engine.
-- BAT parser gate before the engine starts.
+## Recovery-first design
 
-## Recovery / backup
+Before the first KXM system-changing action, a baseline is created automatically. The baseline captures the KXM-owned settings that it may change, the original SysMain service state, the active power plan, and command snapshots such as BCD and power-plan listings.
 
-Before the first system-changing action, KXM creates a baseline under:
+Use **RESTORE ORIGINAL** to return those captured pre-KXM settings.
 
-`C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
+This is not a full Windows image. Personal files are not targeted by the normal optimizer.
 
-The baseline is stored outside the portable KXM folder so moving or deleting the app folder does not remove the normal recovery copy.
+## Profiles
 
-The baseline records KXM-owned registry values, selected service startup/state, selected TCP values, the BlueStacks GPU preference when detected, the active power scheme, a BCD export, and an attempted Windows restore point.
+### Free Fire
+The UI recommendation is:
 
-Use **R — Restore** to restore the captured pre-KXM state.
+- 4 CPU cores
+- 4 GB RAM target
+- High Performance power mode
+- 120 FPS recommended starting point
+- 240 FPS optional ceiling target
 
-> This is not a full Windows system image. It restores the settings captured by KXM before its own changes. Personal files are not targeted by normal profiles.
+Actual FPS depends on the game build, emulator, GPU, CPU load, thermal state, and display refresh rate.
 
-## Recommended workflow
-
-1. Run `KXM_BLUEFIRE.bat` as Administrator.
-2. Run Self-Test.
-3. Run Hardware Audit.
-4. Read the Smart Recommendation.
-5. Apply Recommended or Competitive Profile.
-6. Reboot.
-7. Benchmark and Verify.
-8. Use Restore when you want to undo KXM changes.
-
-## Compatibility
-
-The launcher validates the engine with the Windows PowerShell parser before execution. The BAT remains ASCII-compatible; the PowerShell engine is UTF-8.
+### Game Ready
+Use this immediately before a gaming session. It is intentionally lighter than Smart Optimize and does not apply experimental kernel/GPU tweaks.
 
 ## Safety policy
 
-Normal profiles do not disable Defender or Windows Update, disable the pagefile, disable memory compression, force MSI mode, force HPET/platform-clock hacks, modify game files, inject DLLs, or bypass anti-cheat.
+Normal profiles do not disable Defender or Windows Update, disable the pagefile, disable memory compression, force HPET, force MSI mode, modify game files, inject DLLs, or bypass anti-cheat.
 
-Experimental options remain opt-in and should be benchmarked one at a time.
+Experimental changes should remain opt-in and be benchmarked individually.
+
+## Project structure
+
+- `KXM_BLUEFIRE.bat` — Administrator launcher and syntax gate.
+- `KXM_BLUEFIRE_V21_GUI.ps1` — stable GUI engine.
+- `KXM_LANG_V21.json` — multilingual UI text.
+
+Older v14-v20 files may remain in the repository as development history; the BAT launcher does not use them.
 
 ## License
 
