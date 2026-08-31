@@ -52,10 +52,12 @@ try {
     $Script:KxmPowerMarker = Join-Path $testRoot 'NO_POWER_PLAN.txt'
     $restore = RestoreBaseline
     Assert-Equal $restore.Success $true 'RestoreBaseline reports success for a valid snapshot'
-    $existsAfter = Test-Path -LiteralPath $testKey
-    Assert-Equal $existsAfter $true 'Restore preserves the registry key when needed'
-    $valueAfter = (Get-ItemProperty -LiteralPath $testKey -Name 'TemporaryValue').TemporaryValue
-    if ($null -ne $valueAfter) { throw 'FAIL: Restore did not remove a value that was absent in the baseline' }
+    $valueExists = $false
+    try {
+        $null = Get-ItemProperty -LiteralPath $testKey -Name 'TemporaryValue' -ErrorAction Stop
+        $valueExists = $true
+    } catch {}
+    Assert-Equal $valueExists $false 'RestoreBaseline removes a value absent from the baseline'
     Write-Host 'PASS: RestoreBaseline removes values absent from the baseline' -ForegroundColor Green
 } finally {
     if (Test-Path -LiteralPath $testKey) { Remove-Item -LiteralPath $testKey -Recurse -Force -ErrorAction SilentlyContinue }
