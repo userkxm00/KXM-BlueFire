@@ -1,6 +1,8 @@
 # Changelog
 
-## v26.0-rc.1 - Recovery hardening and truthful diagnostics
+## v1.0.0-rc.1 - First public release candidate
+
+This is the first public KXM BlueFire release line. The internal engine build lineage remains 26.0 for development traceability.
 
 ### Recovery
 
@@ -21,7 +23,7 @@
 
 ### Hardware intelligence
 
-- Recommendations now use CPU cores, logical processors, physical RAM, and storage class.
+- Recommendations use CPU cores, logical processors, physical RAM, and storage class.
 - SysMain remains `KEEP AUTO` for HDD systems and systems with 8 GB RAM or less.
 - BlueStacks CPU/RAM guidance scales down on smaller systems instead of forcing a fixed allocation.
 - 120 FPS is treated as guidance and 240 FPS as an optional ceiling, never as a rendered-FPS guarantee.
@@ -30,7 +32,7 @@
 
 - Thermal Guard reports available ACPI thermal telemetry or `UNKNOWN` without fabricating readings.
 - Driver Health reports display-driver provider, version, and date where available.
-- Windows Update resilience reports pending reboot state and tracked configuration drift.
+- Windows resilience reports pending reboot state and tracked configuration drift.
 - Network diagnostics perform gateway/public endpoint ping samples and report average, minimum, maximum, and jitter.
 - PresentMon is detected when available; KXM does not invent frame-time or FPS data.
 - Conflict checks cover common Discord, RTSS, and Hyper-V style conflicts.
@@ -51,9 +53,15 @@
 - Replaced shared loop-state diagnostics handlers with explicit closures.
 - Hardened critical error handling and logging.
 
+### Release engineering
+
+- Public product version is `1.0.0-rc.1`.
+- Internal engine build lineage remains `26.0`.
+- Release automation validates the exact tag, builds the runtime ZIP, generates SHA256, and publishes or updates the GitHub Release.
+
 ## v25.0
 
-Previous reliability and measurement release candidate. Superseded by v26.0-rc.1.
+Previous reliability and measurement release candidate. Superseded by v1.0.0-rc.1.
 
 ## v24.0
 
