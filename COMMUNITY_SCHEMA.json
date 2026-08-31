@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "events": ["profile_applied", "restore", "session_undo", "game_ready"],
+  "hardware": {
+    "cpu_threads": "integer",
+    "ram_gb": "integer",
+    "storage": ["HDD", "SSD", "Unknown"],
+    "gpu_vendor": ["Intel", "AMD", "NVIDIA", "Other"]
+  },
+  "privacy": {
+    "default_enabled": false,
+    "excluded": ["passwords", "tokens", "personal_files", "account_ids", "mac_addresses", "serial_numbers", "browser_history"]
+  }
+}
