@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "name": "Free Fire",
+  "emulator": "BlueStacks",
+  "dynamic": true,
+  "defaults": {
+    "cpuCores": 4,
+    "ramGB": 4,
+    "powerMode": "High Performance",
+    "fpsTarget": 120,
+    "fpsCeiling": 240,
+    "sysMainOnHddOr8GB": "KEEP AUTO"
+  },
+  "rules": [
+    { "condition": "threads < 4", "cpuCores": 2 },
+    { "condition": "ramGB < 8", "ramGB": 2 }
+  ]
+}
