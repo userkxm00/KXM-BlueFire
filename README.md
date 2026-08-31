@@ -1,61 +1,33 @@
 # KXM BlueFire
 
-**Hardware-aware gaming performance suite for GGOS / BlueStacks / Free Fire.**
+Hardware-aware Windows gaming optimizer for GGOS / BlueStacks / Free Fire.
 
-## Current entry point
+## Current generation
 
-Run **`KXM_BLUEFIRE.bat`** as Administrator. The launcher now starts the stable **v21 GUI**.
+The launcher targets the v23 GUI engine.
 
-## v21 highlights
+### Added in v23
 
-- Modern Windows GUI dashboard.
-- Hardware detection with HDD/SSD fallback using both `Get-PhysicalDisk` and `Win32_DiskDrive`.
-- Smart Free Fire profile targeting **4 CPU cores / 4 GB RAM / High Performance** when the hardware can support it.
-- 240 FPS is presented as an **optional ceiling target**, not a guaranteed FPS result.
-- **GAME READY** quick mode for daily play: safe temp cleanup, DNS flush, High Performance activation, BlueStacks detection, and session priority.
-- Smart Optimize for persistent KXM-owned performance settings.
-- Backup / Restore baseline stored outside the portable folder in `C:\ProgramData\KXM\BlueFire\Backups`.
-- English / العربية / Français with live language switching and RTL mode for Arabic.
-- Benchmark and Verify tools.
-
-## Recovery-first design
-
-Before the first KXM system-changing action, a baseline is created automatically. The baseline captures the KXM-owned settings that it may change, the original SysMain service state, the active power plan, and command snapshots such as BCD and power-plan listings.
-
-Use **RESTORE ORIGINAL** to return those captured pre-KXM settings.
-
-This is not a full Windows image. Personal files are not targeted by the normal optimizer.
-
-## Profiles
-
-### Free Fire
-The UI recommendation is:
-
-- 4 CPU cores
-- 4 GB RAM target
-- High Performance power mode
-- 120 FPS recommended starting point
-- 240 FPS optional ceiling target
-
-Actual FPS depends on the game build, emulator, GPU, CPU load, thermal state, and display refresh rate.
-
-### Game Ready
-Use this immediately before a gaming session. It is intentionally lighter than Smart Optimize and does not apply experimental kernel/GPU tweaks.
+- **GAME READY session mode**: creates/uses the recovery baseline, cleans temporary directories, flushes DNS, switches to High Performance, and prepares a running BlueStacks process.
+- **Session restore**: the original power plan is stored for the gaming session and restored when the session ends or the GUI closes.
+- **Hardware-aware storage detection**: uses PhysicalDisk first and Win32_DiskDrive as a fallback so older HDD systems are not misclassified.
+- **Free Fire profiles**: 4 CPU cores + 4 GB RAM + High Performance as the default BlueStacks target; 120 FPS is the recommended target and 240 FPS is treated only as an optional ceiling.
+- **Conflict checks**: detects common background/virtualization tools such as Discord, RTSS, Hyper-V and Docker.
+- **Before/after benchmark snapshots**: stores system snapshots for comparison. It does not invent FPS results; actual in-game FPS remains a user measurement.
+- **Reboot status**: checks common Windows pending-reboot locations.
+- **Live system panel**: CPU load, RAM use, BlueStacks state and hardware/storage status.
+- **Recovery baseline**: stored outside the portable app under `C:\ProgramData\KXM\BlueFire\Backups`.
+- **Restore**: restores the KXM-managed settings captured before the first modification.
+- **Experimental options remain opt-in** and are kept separate from the normal gaming path.
 
 ## Safety policy
 
-Normal profiles do not disable Defender or Windows Update, disable the pagefile, disable memory compression, force HPET, force MSI mode, modify game files, inject DLLs, or bypass anti-cheat.
+Normal profiles do not disable Defender or Windows Update, disable the Windows pagefile, disable memory compression, inject DLLs, modify game files, or bypass anti-cheat.
 
-Experimental changes should remain opt-in and be benchmarked individually.
+## Compatibility
 
-## Project structure
+Designed for Windows PowerShell 5.1 and Windows Forms. The repository includes a Windows CI workflow that parses every PowerShell file with Windows PowerShell 5.1 so syntax regressions are caught before release.
 
-- `KXM_BLUEFIRE.bat` — Administrator launcher and syntax gate.
-- `KXM_BLUEFIRE_V21_GUI.ps1` — stable GUI engine.
-- `KXM_LANG_V21.json` — multilingual UI text.
+## Usage
 
-Older v14-v20 files may remain in the repository as development history; the BAT launcher does not use them.
-
-## License
-
-MIT
+Run `KXM_BLUEFIRE.bat` as Administrator. Start with the Hardware Audit, then use the Smart Optimize or GAME READY actions.
