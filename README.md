@@ -14,122 +14,134 @@
 
 ### What is KXM BlueFire?
 
-**KXM BlueFire** is a hardware-aware Windows gaming optimizer designed around a simple idea:
+**KXM BlueFire** is a hardware-aware Windows gaming optimizer designed around a simple rule:
 
 > **Detect first. Back up first. Optimize selectively. Measure the result. Restore cleanly.**
 
-It is primarily designed for **BlueStacks + Free Fire / Free Fire MAX**, while keeping its core optimization modules usable for general Windows gaming.
+It is primarily designed for **BlueStacks + Free Fire / Free Fire MAX**, while keeping its core optimization modules useful for general Windows gaming.
 
-KXM is deliberately different from aggressive "one-click Windows debloat" projects. It avoids making destructive system removals part of the normal gaming path and keeps experimental changes separate.
+KXM is deliberately different from aggressive one-click Windows debloat projects. The normal gaming path avoids destructive system removals, keeps experimental changes separated, and makes recovery part of the workflow.
 
-### Why KXM?
+### Design principles
 
-KXM is built around four principles:
+**Hardware-aware:** recommendations depend on CPU, logical processors, RAM, GPU and storage characteristics instead of applying a single preset to every PC.
 
-1. **Hardware awareness** — recommendations depend on CPU, threads, RAM, GPU and storage type instead of blindly applying one preset to every PC.
-2. **Recovery first** — KXM creates a baseline before its first system-changing profile and stores it outside the portable application folder.
-3. **Session-friendly gaming** — the lightweight **GAME READY** mode is intended for the moment immediately before a gaming session.
-4. **Measured changes** — benchmark and verification tools are included so a change can be tested instead of assumed to be beneficial.
+**Recovery-first:** KXM creates a baseline before system-changing profiles and stores it outside the portable application directory.
 
-### Free Fire / BlueStacks guidance
+**Session-friendly:** the **GAME READY** workflow is intended for daily pre-game preparation rather than permanent system modification for every gaming session.
 
-For current BlueStacks guidance, the official BlueStacks documentation recommends **4 CPU cores** for graphics-intensive apps such as Free Fire. Current Free Fire guidance also recommends **4 GB or more of memory**, High Performance mode, and enabling high frame rate. BlueStacks' current Free Fire MAX guide documents **4 cores + 4 GB + 120 FPS** as the 120-FPS configuration. citeturn380828search1turn380828search8turn380828search0
+**Evidence-oriented:** benchmark and verification tools are included so a user can compare system state rather than assuming every tweak improves FPS.
 
-KXM therefore treats the following as a **starting recommendation**, not a universal hard rule:
+### Free Fire / BlueStacks baseline
+
+BlueStacks currently recommends 4 CPU cores for graphics-intensive apps such as Free Fire. Its current Free Fire guidance also recommends 4 GB or more of memory, High Performance mode and High Frame Rate. The current Free Fire MAX guide documents 4 CPU cores + 4 GB memory with 120 FPS enabled for its 120-FPS configuration.
+
+References:
+- [BlueStacks — Free Fire on PC](https://support.bluestacks.com/hc/en-us/articles/360059239591-Free-Fire-on-PC-with-BlueStacks-5)
+- [BlueStacks — CPU and memory allocation](https://support.bluestacks.com/hc/en-us/articles/360057205611-How-to-allocate-more-CPU-cores-and-memory-RAM-to-BlueStacks-5)
+- [BlueStacks — Free Fire MAX on PC](https://support.bluestacks.com/hc/en-us/articles/43864024050829-Free-Fire-MAX-on-PC-with-BlueStacks-5)
+
+KXM therefore treats this as a **starting profile**, not a universal hard rule:
 
 ```text
 BlueStacks CPU       4 cores
 BlueStacks Memory    4 GB
-Performance mode     High / High Performance
+Performance mode     High Performance
 High frame rate      Enabled where supported
 FPS target           120 recommended for supported Free Fire MAX setup
 240 FPS              Optional ceiling only; not an FPS guarantee
 ```
 
-BlueStacks currently documents high-FPS settings in the **120–240 FPS range for supported games**, but the actual frame rate remains dependent on the game, emulator configuration, hardware and display. citeturn380828search10
+BlueStacks currently documents 120–240 FPS settings for supported games, but the actual FPS remains dependent on the game, emulator configuration, hardware and display. See the official [BlueStacks high-FPS guide](https://support.bluestacks.com/hc/en-us/articles/38637938620685-How-to-enable-high-FPS-on-BlueStacks-5).
 
 ### Main features
 
 #### ⚡ GAME READY
 
-A lightweight pre-game workflow for daily use:
+A lightweight daily pre-game workflow:
 
-- Verify or create the KXM recovery baseline.
-- Clean safe Windows temporary directories.
-- Flush DNS.
-- Activate the configured high-performance gaming power plan.
-- Detect BlueStacks.
-- Raise the running BlueStacks player process priority where applicable.
+- verifies or creates the KXM recovery baseline;
+- cleans safe Windows temporary directories;
+- flushes DNS;
+- activates the configured gaming power plan;
+- detects BlueStacks;
+- raises the running BlueStacks player process priority when applicable.
 
-GAME READY is intentionally **not** the place for experimental kernel or graphics-driver registry changes.
+GAME READY intentionally does **not** become the automatic path for experimental kernel or graphics-driver registry changes.
 
 #### 🧠 Smart Hardware Detection
 
 KXM evaluates:
 
-- CPU model, cores and logical processors
-- Installed RAM
-- GPU(s)
-- Virtualization availability
-- HDD / SSD storage characteristics
-- BlueStacks installation state
+- CPU model, cores and logical processors;
+- installed RAM;
+- GPU(s);
+- virtualization state;
+- HDD / SSD characteristics;
+- BlueStacks installation state.
 
-Recommendations are then adapted to the detected system rather than assuming every PC has the same resources.
+The result is used to produce a recommendation rather than blindly forcing the same settings on every computer.
 
 #### 🎮 Gaming profiles
 
 The project separates:
 
-- **Recommended Profile** — conservative, hardware-aware baseline.
-- **Competitive Profile** — stronger gaming-oriented settings where appropriate.
-- **Free Fire / BlueStacks guidance** — tuned around emulator workloads.
-- **Experimental Lab** — isolated advanced settings that require explicit user choice and benchmarking.
+- **Recommended Profile** — conservative hardware-aware baseline;
+- **Competitive Profile** — stronger gaming-oriented settings where appropriate;
+- **Free Fire / BlueStacks guidance** — emulator-focused recommendations;
+- **Experimental Lab** — advanced settings requiring explicit user choice and benchmarking.
 
-#### 💾 Recovery-first design
+#### 💾 Recovery-first
 
-Before the first KXM system-changing profile, a baseline is written under:
+Before the first KXM profile that changes the system, a baseline is written under:
 
 `C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
 
-This is outside the portable KXM folder, so deleting the downloaded application does not automatically delete the recovery data.
+This is outside the portable KXM directory. The baseline is intended to preserve the pre-KXM state of the configuration areas KXM manages.
 
-The baseline can include KXM-managed registry values, selected service state, the active power scheme and other state required by the implemented recovery workflow.
+Use **Restore Original** / **R - Restore** to restore the captured settings.
 
-Use **Restore Original** / **R - Restore** to return to the captured pre-KXM state.
+> KXM's baseline is a **targeted configuration backup**, not a full disk image and not a replacement for a complete Windows backup.
 
-> KXM's baseline is a **targeted configuration backup**, not a full disk image or a replacement for a complete Windows backup.
+#### 🔍 Conflict and dependency checks
 
-#### 🔍 Conflict and dependency awareness
+KXM can inspect conditions that may matter before advanced changes, such as virtualization-related services and commonly used monitoring/overlay tools.
 
-Advanced gaming changes can conflict with virtualization or other utilities. KXM therefore aims to detect relevant conditions before applying settings that could be inappropriate for the current environment.
+The purpose is to prevent a gaming preset from being applied as if every computer had the same software environment.
 
 #### 📊 Benchmark + Verify
 
-KXM provides system snapshots and verification tools so you can inspect the current state before and after optimization.
+KXM provides system snapshots and verification tools so users can inspect the state before and after optimization.
 
-The project intentionally does **not** invent FPS measurements. Actual in-game FPS should be measured inside Free Fire / Free Fire MAX or with an appropriate frame-time/FPS monitoring tool.
+KXM does not invent FPS results. Actual in-game FPS should be measured inside Free Fire / Free Fire MAX or with an appropriate frame-time/FPS monitoring tool.
 
 #### 🌐 Network tools
 
-The networking module focuses on measured, conventional Windows networking configuration such as RSS and TCP auto-tuning, with optional gaming-oriented settings exposed separately.
+The networking layer focuses on conventional Windows networking options such as RSS and TCP auto-tuning, plus optional gaming-oriented configuration.
 
-For latency diagnosis, KXM can be extended with gateway / public endpoint ping and jitter measurements so users can distinguish a PC configuration problem from an internet-path problem.
+Latency diagnosis should be treated separately from FPS optimization: ping, packet loss and jitter can be caused by the network path rather than the PC.
+
+#### ⚡ Maximum FPS power plan
+
+KXM can use a dedicated gaming power-plan workflow that creates, activates and verifies a KXM Maximum FPS plan instead of assuming that the currently active power plan is appropriate.
+
+The previous power plan is retained in the recovery/session state where applicable.
 
 ### Safety policy
 
 KXM does **not** make the following part of its normal recommended path:
 
-- disabling Microsoft Defender as a default
-- disabling Windows Update as a default
-- disabling the Windows pagefile
-- disabling memory compression as a default
-- blindly forcing MSI mode
-- forcing HPET/timer changes without a specific reason
-- removing Edge/WebView2 as a normal optimization step
-- removing large groups of Windows services blindly
-- modifying game files
-- injecting DLLs
-- bypassing anti-cheat or game security
+- disabling Microsoft Defender as a default;
+- disabling Windows Update as a default;
+- disabling the Windows pagefile;
+- disabling memory compression as a default;
+- blindly forcing MSI mode;
+- forcing HPET/timer changes without a specific reason;
+- removing Edge/WebView2 as a normal optimization step;
+- removing large groups of Windows services blindly;
+- modifying game files;
+- injecting DLLs;
+- bypassing anti-cheat or game security.
 
 Experimental changes remain separate because a tweak that helps one configuration can hurt another.
 
@@ -144,13 +156,15 @@ Experimental changes remain separate because a tweak that helps one configuratio
         ↓
 4. Create / verify recovery baseline
         ↓
-5. Apply a profile only if you understand the changes
+5. Preview the intended profile
         ↓
-6. Reboot when required
+6. Apply the selected profile
         ↓
-7. Benchmark / Verify
+7. Reboot when required
         ↓
-8. Keep the result or Restore Original
+8. Benchmark / Verify
+        ↓
+9. Keep the result or Restore Original
 ```
 
 For daily gaming:
@@ -159,47 +173,58 @@ For daily gaming:
 GAME READY → Launch BlueStacks → Play
 ```
 
-### Important notes for low-end PCs
+### Low-end PC policy
 
-On systems with **8 GB RAM and/or HDD storage**, KXM intentionally avoids aggressive "make RAM free at all costs" behavior. Pagefile management remains Windows-managed, and low-memory/HDD systems should not blindly disable services such as SysMain merely because an optimization list on the internet recommends it.
+On systems with **8 GB RAM and/or HDD storage**, KXM deliberately avoids aggressive "free as much RAM as possible" behavior.
 
-This is especially important for older systems where storage latency, memory pressure and background activity interact differently from modern SSD/NVMe systems.
+The pagefile remains Windows-managed, memory compression is not treated as something to disable for the normal profile, and services such as SysMain should not be disabled blindly on slow HDD-based systems.
+
+This is important because older systems behave differently from modern SSD/NVMe systems under memory pressure and storage latency.
 
 ### Languages
 
-The user interface is designed to support:
+The project is designed around three user-facing languages:
 
-- 🇬🇧 English
-- 🇩🇿 العربية — Arabic / RTL
-- 🇫🇷 Français
+- English
+- العربية — Arabic / RTL
+- Français
 
-Arabic is treated as a first-class interface requirement rather than plain text pasted into a legacy console.
+Arabic is treated as a first-class interface requirement rather than text inserted into a legacy console.
 
 ### Project status
 
 **v24 is a Community Release Candidate.**
 
-The public `main` branch is intentionally kept clean so users do not accidentally download an obsolete development engine.
+The public `main` branch is intentionally kept clean so users do not accidentally run an obsolete development engine.
 
-Before calling any release "production ready", the project should pass its Windows-side PowerShell/GUI validation, hardware-detection checks and recovery verification on representative machines.
+Before a production release, the project should be validated on representative Windows installations for:
+
+- PowerShell 5.1 parsing;
+- GUI startup;
+- hardware detection;
+- BlueStacks detection;
+- recovery baseline creation;
+- restore correctness;
+- profile switching;
+- reboot-required handling.
 
 ### Contributing
 
-Issues, hardware compatibility reports, benchmark comparisons and pull requests are welcome.
+Compatibility reports, benchmark comparisons, issues and pull requests are welcome.
 
-When reporting a problem, include:
+A useful compatibility report should include:
 
-- Windows version/build
-- CPU
-- RAM
-- GPU
-- HDD / SSD / NVMe
-- BlueStacks version
-- KXM profile used
-- Whether a reboot was performed
-- Relevant KXM log output
+- Windows version/build;
+- CPU;
+- RAM;
+- GPU;
+- HDD / SSD / NVMe;
+- BlueStacks version;
+- KXM profile used;
+- whether a reboot was performed;
+- relevant KXM log output.
 
-Do **not** upload personal files, passwords, tokens or private system data.
+Do not upload passwords, tokens, personal files or private system information.
 
 ### License
 
@@ -215,67 +240,54 @@ Released under the [MIT License](LICENSE).
 
 **GGOS + BlueStacks + Free Fire / Free Fire MAX**.
 
-الفكرة الأساسية للمشروع:
+فلسفة المشروع:
 
-> **افحص الجهاز أولًا → احفظ الإعدادات أولًا → طبّق المناسب فقط → اختبر النتيجة → استرجع بسهولة عند الحاجة.**
+> **افحص أولًا → احفظ الإعدادات أولًا → طبّق المناسب فقط → قِس النتيجة → استرجع بسهولة.**
 
-KXM ليس مجرد ملف Registry أو قائمة Tweaks عشوائية. الهدف هو أن يتعامل البرنامج مع الأجهزة المختلفة بطريقة مختلفة بدل إجبار كل جهاز على نفس الإعدادات.
+الهدف ليس تطبيق نفس الـTweaks على كل الأجهزة، بل تحليل الجهاز وتقديم توصيات مناسبة له.
 
-## لماذا KXM؟
+## المبادئ الأساسية
 
-المشروع مبني على أربع أفكار:
+### 🧠 تحليل الجهاز
 
-### 1. 🧠 تحليل الجهاز
+يقوم KXM بتحليل CPU والـCores والـThreads وRAM وGPU ونوع التخزين HDD/SSD وحالة Virtualization ووجود BlueStacks.
 
-يقوم KXM بفحص:
+بعد ذلك يعرض توصية بدل تنفيذ كل الخيارات بشكل أعمى.
 
-- المعالج CPU
-- عدد الأنوية والـThreads
-- RAM
-- GPU
-- نوع التخزين HDD / SSD
-- Virtualization
-- وجود BlueStacks
+### 💾 Recovery-first
 
-ثم يعطي توصية مناسبة نسبيًا لهذا الجهاز.
+قبل أول Profile يغيّر إعدادات النظام، ينشئ KXM Baseline داخل:
 
-### 2. 💾 الاسترجاع قبل التعديل
+`C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
 
-قبل أول Profile يقوم بتعديل النظام، ينشئ KXM نسخة Baseline في:
+هذا المجلد خارج مجلد KXM المحمول، ويمكن استعماله لاحقًا مع **Restore Original** لإرجاع الإعدادات التي التقطها KXM قبل التعديل.
 
-`C:\ProgramData\KXM\BlueFire\Backups`
+> النسخة الاحتياطية هي **نسخة إعدادات مستهدفة** وليست Image كاملة للقرص أو بديلًا عن Backup كامل لويندوز.
 
-أي أن نسخة الاسترجاع ليست داخل مجلد البرنامج المحمول على سطح المكتب.
+### ⚡ GAME READY
 
-ومن زر **Restore Original** يمكن إعادة الإعدادات التي كانت موجودة قبل تعديلات KXM ضمن نطاق الإعدادات التي يديرها البرنامج.
+وضع خفيف للاستخدام اليومي قبل اللعب:
 
-> هذه ليست صورة كاملة للقرص وليست بديلًا عن Backup كامل لويندوز.
+- التحقق من Baseline أو إنشاؤه عند الحاجة؛
+- تنظيف الملفات المؤقتة الآمنة؛
+- Flush DNS؛
+- تفعيل خطة طاقة الألعاب؛
+- اكتشاف BlueStacks؛
+- رفع أولوية BlueStacks عند تشغيله.
 
-### 3. ⚡ GAME READY
+ولا يطبّق GAME READY تعديلات Kernel التجريبية أو تعديلات GPU الحساسة في المسار العادي.
 
-وضع خفيف للاستخدام اليومي قبل اللعب.
+## إعدادات Free Fire وBlueStacks
 
-يستطيع تنفيذ:
+وفق توثيق BlueStacks الحالي، يتم التوصية بـ **4 أنوية CPU** لتطبيقات رسومية مثل Free Fire، مع 4 GB RAM أو أكثر ووضع High Performance وتفعيل High Frame Rate. وبالنسبة إلى Free Fire MAX، توثيق BlueStacks الحالي يشرح إعداد 4 أنوية + 4 GB + 120 FPS للوضع 120 FPS.
 
-- تنظيف الملفات المؤقتة الآمنة.
-- Flush DNS.
-- تفعيل خطة طاقة الأداء العالي.
-- اكتشاف BlueStacks.
-- رفع أولوية عملية BlueStacks عند توفرها.
+المراجع الرسمية:
 
-ولا يقوم GAME READY بتطبيق تعديلات Kernel التجريبية في المسار العادي.
+- [BlueStacks — Free Fire على الكمبيوتر](https://support.bluestacks.com/hc/ar/articles/360059239591-Free-Fire-on-PC-with-BlueStacks-5)
+- [BlueStacks — تخصيص CPU وRAM](https://support.bluestacks.com/hc/en-us/articles/360057205611-How-to-allocate-more-CPU-cores-and-memory-RAM-to-BlueStacks-5)
+- [BlueStacks — Free Fire MAX](https://support.bluestacks.com/hc/ar/articles/43864024050829-Free-Fire-MAX-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D9%83%D9%85%D8%A8%D9%8A%D9%88%D8%AA%D8%B1-%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85-BlueStacks-5)
 
-### 4. 📊 الاختبار والقياس
-
-يوفر KXM أدوات Benchmark وVerify حتى لا نفترض أن كل Tweak يزيد FPS.
-
-الهدف هو معرفة ما إذا كان التغيير أعطى فائدة فعلية على الجهاز المستهدف.
-
-## Free Fire وBlueStacks
-
-وفق توثيق BlueStacks الحالي، يتم التوصية بـ **4 أنوية CPU** لتطبيقات رسومية مثل Free Fire، كما توصي إرشادات Free Fire الحالية بـ4 GB RAM أو أكثر ووضع High Performance وتفعيل High Frame Rate. وبالنسبة إلى Free Fire MAX، يوثق BlueStacks إعداد **4 أنوية + 4 GB + 120 FPS** للوصول إلى إعداد 120 FPS. citeturn380828search1turn380828search8turn380828search0
-
-لذلك تكون نقطة البداية في KXM عادةً:
+كنقطة بداية:
 
 ```text
 CPU في BlueStacks    4 Cores
@@ -286,39 +298,52 @@ FPS                  120 هدف موصى به
 240 FPS              سقف اختياري وليس ضمانًا
 ```
 
-يدعم BlueStacks حاليًا معدلات مرتفعة بين 120 و240 FPS لبعض الألعاب المدعومة، لكن الرقم الفعلي يعتمد على اللعبة والجهاز والإعدادات والشاشة. citeturn380828search10
+BlueStacks يتيح حاليًا إعدادات 120–240 FPS لبعض الألعاب المتوافقة، لكن FPS الفعلي يعتمد على اللعبة والجهاز وإعدادات المحاكي والشاشة. راجع [دليل BlueStacks لمعدلات FPS العالية](https://support.bluestacks.com/hc/ar/articles/38637938620685-%D9%83%D9%8A%D9%81%D9%8A%D8%A9-%D8%AA%D9%81%D8%B9%D9%8A%D9%84-FPS-%D8%B9%D8%A7%D9%84%D9%8A-%D8%B9%D9%84%D9%89-BlueStacks-5).
 
-## أهم المميزات
+## المميزات الرئيسية
 
-- ⚡ GAME READY
-- 🧠 Smart Hardware Detection
-- 🎮 Recommended / Competitive Profiles
-- 💾 Baseline + Restore
-- 🔍 Conflict / Dependency Checks
-- 📊 Benchmark + Verify
-- 🌐 Network tools
-- 🧪 Experimental Lab
-- 🌍 English / العربية / Français
+### 🎮 Gaming Profiles
+
+- **Recommended Profile:** بروفايل محافظ حسب الجهاز.
+- **Competitive Profile:** إعدادات أقوى عندما تكون مناسبة.
+- **Free Fire / BlueStacks:** توصيات مرتبطة بالمحاكي.
+- **Experimental Lab:** خيارات متقدمة منفصلة وتتطلب اختيارًا صريحًا واختبارًا.
+
+### 🔍 Conflict / Dependency
+
+يفحص KXM بعض الظروف التي قد تجعل بعض التعديلات غير مناسبة، مثل خدمات مرتبطة بالـVirtualization وبعض برامج الـoverlay أو monitoring.
+
+### 📊 Benchmark / Verify
+
+يمكن مقارنة حالة النظام قبل وبعد التعديل، مع تجنب اختراع أرقام FPS غير مقاسة فعلًا.
+
+### 🌐 Network
+
+يشمل أدوات وإعدادات مثل RSS وTCP auto-tuning وبعض إعدادات الألعاب الاختيارية.
+
+### ⚡ Maximum FPS Power Plan
+
+يمكن لـKXM إنشاء خطة طاقة ألعاب مخصصة وتفعيلها ثم التحقق من أنها أصبحت Active، بدل افتراض أن أي Power Plan حالي مناسب للألعاب.
 
 ## سياسة الأمان
 
-KXM لا يجعل بشكل افتراضي:
+المسار العادي في KXM لا يقوم افتراضيًا بـ:
 
-- تعطيل Defender
-- تعطيل Windows Update
-- تعطيل Pagefile
-- تعطيل Memory Compression
-- Force MSI بشكل أعمى
-- Force HPET بدون سبب واضح
-- إزالة Edge / WebView2
-- قتل عدد كبير من خدمات Windows عشوائيًا
-- تعديل ملفات اللعبة
-- DLL Injection
-- تجاوز Anti-Cheat
+- تعطيل Defender؛
+- تعطيل Windows Update؛
+- تعطيل Pagefile؛
+- تعطيل Memory Compression؛
+- Force MSI بشكل أعمى؛
+- Force HPET بدون سبب محدد؛
+- إزالة Edge/WebView2؛
+- حذف عشرات الخدمات عشوائيًا؛
+- تعديل ملفات اللعبة؛
+- DLL Injection؛
+- تجاوز Anti-Cheat.
 
-التعديلات التجريبية منفصلة، لأن نفس الـTweak قد يفيد جهازًا ويضر جهازًا آخر.
+التعديلات التجريبية منفصلة لأن نفس الـTweak قد يفيد جهازًا ويضر جهازًا آخر.
 
-## طريقة الاستخدام المقترحة
+## طريقة الاستخدام
 
 ```text
 1. شغّل KXM كمسؤول
@@ -329,45 +354,54 @@ KXM لا يجعل بشكل افتراضي:
         ↓
 4. تأكد من وجود Baseline
         ↓
-5. طبّق Profile المناسب
+5. عاين التغييرات
         ↓
-6. أعد التشغيل إذا طلب البرنامج
+6. طبّق Profile
         ↓
-7. Benchmark / Verify
+7. أعد التشغيل عند الحاجة
         ↓
-8. احتفظ بالنتيجة أو Restore Original
+8. Benchmark / Verify
+        ↓
+9. احتفظ بالنتيجة أو Restore Original
 ```
 
-وللاستخدام اليومي:
+للاستخدام اليومي:
 
 ```text
 GAME READY → افتح BlueStacks → العب
 ```
 
-## الأجهزة الضعيفة
+## الأجهزة القديمة و8 GB RAM + HDD
 
-في أجهزة **8 GB RAM أو HDD** لا نريد تحويل البرنامج إلى "RAM Cleaner" عدواني.
+في الأجهزة ذات **8 GB RAM أو HDD** لا يحاول KXM تحرير أكبر قدر ممكن من الذاكرة بأي طريقة.
 
-لذلك يحتفظ KXM بالـPagefile بإدارة Windows، ولا يجعل تعطيل SysMain أو تفريغ الذاكرة بشكل قسري جزءًا من المسار الآمن لهذه الفئة من الأجهزة.
+يبقى Pagefile تحت إدارة Windows، ولا يتم جعل تعطيل Memory Compression أو SysMain جزءًا من المسار الآمن لهذه الفئة من الأجهزة.
+
+## اللغات
+
+- English
+- العربية — RTL
+- Français
+
+العربية متطلب أساسي في الواجهة وليست مجرد نص يضاف إلى Console قديمة.
 
 ## حالة المشروع
 
-**v24 = Community Release Candidate**.
+**v24 = Community Release Candidate.**
 
-الهدف الآن هو تثبيت الاعتمادية، اختبار الاسترجاع، اختبار اكتشاف العتاد، والتحقق على أجهزة مختلفة قبل وصف الإصدار بأنه Production Release.
+الفرع `main` مقصود أن يبقى نظيفًا حتى لا يحمّل المستخدم نسخة تطويرية قديمة بالخطأ.
+
+قبل إعلان Production Release، يجب اختبار KXM على عدة تكوينات Windows للتحقق من PowerShell 5.1 والـGUI واكتشاف العتاد والاسترجاع وتبديل Profiles وحالات إعادة التشغيل.
 
 ## المساهمة
 
-يمكن إرسال:
+نرحب بـIssues وPull Requests وتقارير التوافق ونتائج Benchmark.
 
-- تقارير مشاكل
-- نتائج Benchmark
-- تقارير توافق الأجهزة
-- Pull Requests
+عند الإبلاغ عن مشكلة، أرسل مواصفات الجهاز ونسخة Windows وBlueStacks والـProfile المستخدم والسجلات ذات الصلة، دون رفع بيانات شخصية أو كلمات مرور أو Tokens.
 
-ويفضل ذكر مواصفات الجهاز ونسخة Windows وBlueStacks وProfile المستخدم.
+## الترخيص
 
-لا ترفع كلمات مرور أو Tokens أو ملفات شخصية.
+المشروع تحت [MIT License](LICENSE).
 
 ---
 
@@ -379,63 +413,62 @@ GAME READY → افتح BlueStacks → العب
 
 **GGOS + BlueStacks + Free Fire / Free Fire MAX**.
 
-Sa philosophie est simple :
+Sa philosophie :
 
-> **Analyser d'abord → sauvegarder avant modification → appliquer uniquement ce qui est pertinent → mesurer → restaurer proprement si nécessaire.**
+> **Analyser d'abord → sauvegarder avant modification → appliquer seulement ce qui est pertinent → mesurer → restaurer proprement.**
 
-KXM ne cherche pas à appliquer aveuglément le même lot de tweaks à tous les PC.
+Le but n'est pas d'imposer le même ensemble de tweaks à tous les ordinateurs.
 
-## Pourquoi KXM ?
+## Principes du projet
 
-### 🧠 Analyse matérielle
+### 🧠 Détection matérielle
 
-KXM peut prendre en compte :
+KXM prend en compte :
 
-- CPU
-- Nombre de coeurs et threads
-- RAM
-- GPU
-- HDD / SSD
-- Virtualisation
-- Présence de BlueStacks
+- CPU ;
+- coeurs et threads ;
+- RAM ;
+- GPU ;
+- HDD / SSD ;
+- virtualisation ;
+- présence de BlueStacks.
 
-Le profil recommandé est ensuite adapté à la machine détectée.
+Les recommandations sont adaptées à la machine détectée.
 
 ### 💾 Recovery-first
 
 Avant le premier profil qui modifie le système, KXM crée une baseline dans :
 
-`C:\ProgramData\KXM\BlueFire\Backups`
+`C:\ProgramData\KXM\BlueFire\Backups\YYYYMMDD_HHMMSS`
 
-La sauvegarde est donc séparée du dossier portable de l'application.
-
-Le bouton **Restore Original** permet de revenir à l'état capturé avant les modifications KXM prises en charge.
+La sauvegarde est placée hors du dossier portable de KXM et sert à restaurer les réglages pris en charge avant les modifications.
 
 > Il s'agit d'une sauvegarde de configuration ciblée, pas d'une image complète de Windows.
 
 ### ⚡ GAME READY
 
-Un mode léger destiné à la préparation quotidienne d'une session de jeu :
+Mode léger pour la préparation quotidienne d'une session :
 
-- nettoyage des fichiers temporaires sûrs
-- Flush DNS
-- activation du profil d'alimentation haute performance
-- détection de BlueStacks
-- priorité supérieure pour le processus BlueStacks lorsqu'il est disponible
+- vérifier ou créer la baseline ;
+- nettoyer les fichiers temporaires sûrs ;
+- vider le cache DNS ;
+- activer le profil d'alimentation jeu ;
+- détecter BlueStacks ;
+- augmenter la priorité du processus BlueStacks lorsqu'il est actif.
 
-Le mode GAME READY n'applique pas les réglages Kernel expérimentaux du laboratoire.
-
-### 📊 Benchmark et vérification
-
-KXM fournit des snapshots et des outils de vérification afin de comparer l'état du système avant et après une optimisation.
-
-Le projet ne prétend pas mesurer un FPS de jeu qu'il n'a pas réellement mesuré. Les FPS réels doivent être vérifiés dans le jeu ou avec un outil de monitoring approprié.
+Les modifications Kernel expérimentales restent séparées.
 
 ## Free Fire / BlueStacks
 
-La documentation actuelle de BlueStacks recommande **4 coeurs CPU** pour les applications graphiquement exigeantes comme Free Fire. Les recommandations Free Fire actuelles mentionnent également 4 GB de mémoire ou plus, le mode High Performance et le High Frame Rate. Pour Free Fire MAX, BlueStacks documente actuellement la configuration **4 coeurs + 4 GB + 120 FPS** pour le mode 120 FPS. citeturn380828search1turn380828search8turn380828search0
+La documentation actuelle de BlueStacks recommande 4 coeurs CPU pour les applications graphiquement exigeantes telles que Free Fire, ainsi que 4 GB de mémoire ou plus, le mode High Performance et le High Frame Rate. Pour Free Fire MAX, la documentation actuelle décrit une configuration 4 coeurs + 4 GB + 120 FPS pour le mode 120 FPS.
 
-KXM utilise donc comme point de départ :
+Références officielles :
+
+- [BlueStacks — Free Fire sur PC](https://support.bluestacks.com/hc/fr-fr/articles/360059239591-Free-Fire-sur-PC-avec-BlueStacks-5)
+- [BlueStacks — allocation CPU et RAM](https://support.bluestacks.com/hc/en-us/articles/360057205611-How-to-allocate-more-CPU-cores-and-memory-RAM-to-BlueStacks-5)
+- [BlueStacks — Free Fire MAX](https://support.bluestacks.com/hc/fr-fr/articles/43864024050829-Free-Fire-MAX-sur-PC-avec-BlueStacks-5)
+
+Point de départ KXM :
 
 ```text
 CPU BlueStacks       4 coeurs
@@ -446,32 +479,33 @@ FPS                  120 recommandé selon le jeu
 240 FPS              plafond optionnel, pas une garantie
 ```
 
-BlueStacks documente actuellement des plages de 120 à 240 FPS pour certains jeux compatibles. Le FPS réel dépend toutefois du jeu, du matériel, de la configuration de l'émulateur et de l'écran. citeturn380828search10
+BlueStacks documente actuellement des réglages élevés jusqu'à 240 FPS pour certains jeux compatibles. Le FPS réel dépend toutefois du jeu, du matériel, de la configuration de l'émulateur et de l'écran. Voir le [guide BlueStacks High FPS](https://support.bluestacks.com/hc/fr-fr/articles/38637938620685-Comment-activer-un-FPS-%C3%A9lev%C3%A9-sur-BlueStacks-5).
 
 ## Fonctionnalités principales
 
 - ⚡ GAME READY
-- 🧠 Détection matérielle intelligente
-- 🎮 Profils Recommended / Competitive
-- 💾 Baseline et restauration
-- 🔍 Détection des conflits et dépendances
-- 📊 Benchmark et Verify
-- 🌐 Outils réseau
-- 🧪 Laboratoire expérimental
-- 🌍 Anglais / Arabe / Français
+- 🧠 détection matérielle intelligente
+- 🎮 profils Recommended / Competitive
+- 💾 baseline et restauration
+- 🔍 vérifications de conflits et dépendances
+- 📊 benchmark et Verify
+- 🌐 outils réseau
+- ⚡ Maximum FPS Power Plan
+- 🧪 laboratoire expérimental séparé
+- 🌍 anglais / arabe / français
 
 ## Politique de sécurité
 
 Le profil normal de KXM ne désactive pas volontairement :
 
-- Microsoft Defender par défaut
-- Windows Update par défaut
-- le Pagefile
-- la compression mémoire
-- MSI Mode de façon aveugle
-- HPET/timer tweaks sans raison spécifique
-- Edge / WebView2
-- de grandes quantités de services Windows sans validation
+- Microsoft Defender par défaut ;
+- Windows Update par défaut ;
+- le Pagefile ;
+- la compression mémoire ;
+- MSI Mode de façon aveugle ;
+- HPET/timer tweaks sans raison spécifique ;
+- Edge / WebView2 ;
+- de grandes quantités de services Windows sans validation.
 
 KXM ne modifie pas les fichiers du jeu, n'injecte pas de DLL et ne contourne pas les systèmes anti-triche.
 
@@ -482,54 +516,54 @@ KXM ne modifie pas les fichiers du jeu, n'injecte pas de DLL et ne contourne pas
         ↓
 2. Audit matériel
         ↓
-3. Examiner la recommandation intelligente
+3. Examiner la recommandation
         ↓
-4. Vérifier la baseline de récupération
+4. Vérifier la baseline
         ↓
-5. Appliquer le profil choisi
+5. Prévisualiser les changements
         ↓
-6. Redémarrer si nécessaire
+6. Appliquer le profil
         ↓
-7. Benchmark / Verify
+7. Redémarrer si nécessaire
         ↓
-8. Conserver le résultat ou restaurer l'original
+8. Benchmark / Verify
+        ↓
+9. Conserver le résultat ou restaurer l'original
 ```
 
-Pour le jeu quotidien :
+Pour une utilisation quotidienne :
 
 ```text
 GAME READY → lancer BlueStacks → jouer
 ```
 
-## PC anciens / entrée de gamme
+## PC anciens / 8 GB + HDD
 
-Sur un PC avec **8 GB de RAM et/ou un HDD**, KXM évite volontairement les stratégies agressives qui cherchent uniquement à afficher plus de RAM libre.
+Sur une machine avec **8 GB de RAM et/ou un HDD**, KXM évite les stratégies agressives qui cherchent uniquement à afficher plus de RAM libre.
 
-Le Pagefile reste géré par Windows et les services tels que SysMain ne doivent pas être désactivés aveuglément sur une machine lente à base de HDD.
+Le Pagefile reste géré par Windows et SysMain n'est pas désactivé aveuglément sur ces configurations.
+
+## Langues
+
+- English
+- العربية — RTL
+- Français
+
+L'arabe est traité comme une langue de premier niveau dans l'interface et non comme du texte ajouté à une vieille console.
 
 ## Statut du projet
 
 **v24 est une Community Release Candidate.**
 
-La branche `main` est volontairement maintenue propre pour éviter qu'un utilisateur télécharge accidentellement un ancien moteur de développement.
+La branche publique `main` est volontairement maintenue propre afin d'éviter qu'un utilisateur lance un ancien moteur de développement.
 
-Avant une déclaration de version Production, KXM doit encore être validé sur plusieurs configurations Windows pour la syntaxe PowerShell, la détection matériel, la GUI et surtout la restauration.
+Avant une version Production, KXM doit être validé sur plusieurs configurations Windows pour PowerShell 5.1, la GUI, la détection du matériel, la restauration et la gestion des profils.
 
 ## Contribuer
 
-Les rapports de compatibilité, benchmarks, issues et pull requests sont les bienvenus.
+Les issues, pull requests, rapports de compatibilité et résultats de benchmark sont les bienvenus.
 
-Pour un rapport utile, indiquez :
-
-- version/build de Windows
-- CPU
-- RAM
-- GPU
-- HDD / SSD / NVMe
-- version de BlueStacks
-- profil KXM utilisé
-- redémarrage effectué ou non
-- logs KXM pertinents
+Merci d'indiquer, lors d'un rapport : version/build Windows, CPU, RAM, GPU, type de stockage, version BlueStacks, profil KXM et logs pertinents.
 
 Ne partagez pas de mots de passe, tokens ou données privées.
 
