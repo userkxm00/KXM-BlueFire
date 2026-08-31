@@ -4,9 +4,9 @@ Use this checklist before creating a public GitHub Release.
 
 ## Source integrity
 
-- [ ] `VERSION` matches the intended release tag.
-- [ ] `KXM_BLUEFIRE.ps1` version matches `VERSION` major/minor.
-- [ ] `KXM_CONFIG.ini` version matches `VERSION` major/minor.
+- [ ] `VERSION` matches the intended public release tag.
+- [ ] `KXM_CONFIG.ini` contains the same public product version and records the internal engine build separately.
+- [ ] `KXM_BLUEFIRE.ps1` is the single production engine and passes CI validation.
 - [ ] No development copies of the engine are present.
 - [ ] Runtime package contains only files required by end users.
 
@@ -73,11 +73,11 @@ The release package should contain only:
 
 Do not ship development workflows, tests, internal docs, or maintainer-only files in the runtime ZIP.
 
-## Stable-release gate
+## RC to Stable gate
 
 A green CI run does not equal Stable.
 
-Before a stable release, gather real-device compatibility reports across:
+Before `v1.0.0`, gather real-device compatibility reports across:
 
 - Intel and AMD CPUs
 - integrated and discrete GPUs
