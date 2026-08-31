@@ -1,0 +1,17 @@
+{
+  "en": {
+    "subtitle":"Gaming Performance Platform  •  Windows / BlueStacks / Free Fire",
+    "quick":"QUICK PLAY","ready":"GAME READY ⚡","end":"END SESSION","smart":"SMART OPTIMIZE","restore":"RESTORE ORIGINAL","system_ready":"● SYSTEM READY","diag":"DIAGNOSTICS & TOOLS",
+    "tool_hardware":"HARDWARE AUDIT","tool_driver":"DRIVER HEALTH","tool_thermal":"THERMAL GUARD","tool_conflict":"CONFLICT CHECK","tool_update":"UPDATE RESILIENCE","tool_latency":"NETWORK LATENCY","tool_bench":"FRAME-TIME BENCH","tool_profile":"PROFILE MANAGER","tool_community":"COMMUNITY INSIGHTS","tool_verify":"VERIFY STATE","tool_dry":"DRY RUN","tool_backup":"BACKUP CENTER","share_on":"Anonymous sharing: ON","share_off":"Anonymous sharing: OFF"
+  },
+  "ar": {
+    "subtitle":"منصة أداء الألعاب  •  Windows / BlueStacks / Free Fire",
+    "quick":"التشغيل السريع","ready":"GAME READY ⚡","end":"إنهاء الجلسة","smart":"تحسين ذكي","restore":"استعادة الأصل","system_ready":"● النظام جاهز","diag":"الفحص والأدوات",
+    "tool_hardware":"فحص العتاد","tool_driver":"حالة التعريفات","tool_thermal":"الحماية الحرارية","tool_conflict":"فحص التعارض","tool_update":"مقاومة تغييرات Windows","tool_latency":"زمن الشبكة","tool_bench":"قياس Frame-Time","tool_profile":"مدير البروفايلات","tool_community":"بيانات المجتمع","tool_verify":"تحقق من الحالة","tool_dry":"معاينة التغييرات","tool_backup":"النسخ الاحتياطي","share_on":"المشاركة المجهّلة: مفعّلة","share_off":"المشاركة المجهّلة: متوقفة"
+  },
+  "fr": {
+    "subtitle":"Plateforme de performance gaming  •  Windows / BlueStacks / Free Fire",
+    "quick":"JEU RAPIDE","ready":"GAME READY ⚡","end":"FIN DE SESSION","smart":"OPTIMISATION SMART","restore":"RESTAURER L'ORIGINAL","system_ready":"● SYSTEME PRET","diag":"DIAGNOSTICS & OUTILS",
+    "tool_hardware":"AUDIT MATERIEL","tool_driver":"SANTE DES PILOTES","tool_thermal":"PROTECTION THERMIQUE","tool_conflict":"VERIF CONFLITS","tool_update":"RESILIENCE UPDATE","tool_latency":"LATENCE RESEAU","tool_bench":"BENCH FRAME-TIME","tool_profile":"GESTION DES PROFILS","tool_community":"INSIGHTS COMMUNAUTAIRES","tool_verify":"VERIFIER L'ETAT","tool_dry":"APERÇU","tool_backup":"SAUVEGARDE","share_on":"Partage anonyme: ON","share_off":"Partage anonyme: OFF"
+  }
+}
