@@ -3,10 +3,17 @@ import "./globals.css";
 import SiteNav from "./components/SiteNav";
 
 export const metadata: Metadata = {
-  title: "KXM BlueFire — Hardware-aware gaming performance",
-  description: "KXM BlueFire prepares Windows and BlueStacks for gaming with recovery-first, hardware-aware optimization and community evidence.",
+  title: "KXM BlueFire — Measured Windows Gaming Performance",
+  description: "Hardware-aware Windows gaming optimization for BlueStacks and Free Fire, built around recovery, measurement and community evidence.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" suppressHydrationWarning><body><SiteNav/>{children}</body></html>;
+  return (
+    <html lang="en" dir="ltr">
+      <body>
+        <SiteNav />
+        {children}
+      </body>
+    </html>
+  );
 }
