@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a reproducible KXM problem
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please remove usernames, serial numbers, IPs and other personal data from logs/screenshots."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Windows build, CPU, RAM, GPU, storage type, BlueStacks version and KXM version.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
