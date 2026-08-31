@@ -32,4 +32,36 @@ if (-not (Get-Command Recommendation -ErrorAction SilentlyContinue)) { throw 'Re
 if (-not (Get-Command RestoreBaseline -ErrorAction SilentlyContinue)) { throw 'RestoreBaseline function missing' }
 if (-not (Get-Command Test-KxmLatency -ErrorAction SilentlyContinue)) { throw 'Test-KxmLatency function missing' }
 if (-not (Get-Command PendingReboot -ErrorAction SilentlyContinue)) { throw 'PendingReboot function missing' }
-Write-Host 'PASS: core functions are present' -ForegroundColor Green
+
+$testRoot = Join-Path $env:TEMP ('KXM-Restore-Test-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
+$testKey = 'HKCU:\Software\KXM\BlueFireTest'
+try {
+    New-Item -Path $testKey -Force | Out-Null
+    New-ItemProperty -Path $testKey -Name 'TemporaryValue' -PropertyType DWord -Value 123 -Force | Out-Null
+    $entry = [pscustomobject]@{Path=$testKey;Name='TemporaryValue';Exists=$false;Value=$null;Kind='DWord'}
+    $state = [pscustomobject]@{Schema=2;Version='26.0';Created=(Get-Date).ToString('o');PowerPlanGuid=$null;Registry=@($entry);Services=@()}
+    $baselineDir = Join-Path $testRoot 'Baseline'
+    New-Item -ItemType Directory -Path $baselineDir -Force | Out-Null
+    $baselineFile = Join-Path $baselineDir 'Baseline.xml'
+    $state | Export-Clixml -LiteralPath $baselineFile
+    $oldPointer = $Script:Pointer
+    $oldMarker = $Script:KxmPowerMarker
+    $Script:Pointer = Join-Path $testRoot 'CURRENT_BASELINE.txt'
+    Set-Content -LiteralPath $Script:Pointer -Value $baselineDir -Encoding UTF8
+    $Script:KxmPowerMarker = Join-Path $testRoot 'NO_POWER_PLAN.txt'
+    $restore = RestoreBaseline
+    Assert-Equal $restore.Success $true 'RestoreBaseline reports success for a valid snapshot'
+    $existsAfter = Test-Path -LiteralPath $testKey
+    Assert-Equal $existsAfter $true 'Restore preserves the registry key when needed'
+    $valueAfter = (Get-ItemProperty -LiteralPath $testKey -Name 'TemporaryValue').TemporaryValue
+    if ($null -ne $valueAfter) { throw 'FAIL: Restore did not remove a value that was absent in the baseline' }
+    Write-Host 'PASS: RestoreBaseline removes values absent from the baseline' -ForegroundColor Green
+} finally {
+    if (Test-Path -LiteralPath $testKey) { Remove-Item -LiteralPath $testKey -Recurse -Force -ErrorAction SilentlyContinue }
+    if ($oldPointer) { $Script:Pointer = $oldPointer }
+    if ($oldMarker) { $Script:KxmPowerMarker = $oldMarker }
+    if (Test-Path -LiteralPath $testRoot) { Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue }
+}
+
+Write-Host 'PASS: KXM core regression suite completed' -ForegroundColor Green
