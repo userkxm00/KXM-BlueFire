@@ -12,6 +12,7 @@ $KxmTelemetryConfig = Join-Path $KxmTelemetryRoot 'telemetry.json'
 $KxmTelemetryQueue = Join-Path $KxmTelemetryRoot 'queue.jsonl'
 $KxmClientConfig = Join-Path $PSScriptRoot 'KXM_SUPABASE_CONFIG.json'
 $KxmTelemetrySchema = 1
+$KxmClientVersion = '26.0'
 
 New-Item -ItemType Directory -Path $KxmTelemetryRoot -Force | Out-Null
 
@@ -54,7 +55,7 @@ function Get-KxmCoarseHardware {
 
 function New-KxmTelemetryEvent {
     param([string]$EventName,$Hardware,[string]$Game='',[string]$Emulator='',[string]$Profile='',[string[]]$Changes=@(),[bool]$Success=$true,[bool]$RebootRequired=$false,[bool]$Restored=$false,[hashtable]$Benchmark=$null,[string]$EmulatorVersion='',[string]$WindowsBuildTier='')
-    $event=[ordered]@{schema=$KxmTelemetrySchema;kx_version='25.0';event=$EventName;timestamp_utc=(Get-Date).ToUniversalTime().ToString('o');hardware=(Get-KxmCoarseHardware $Hardware);target=[ordered]@{emulator=$Emulator;emulator_version=$EmulatorVersion;game=$Game;profile=$Profile};changes=@($Changes);result=[ordered]@{success=$Success;reboot_required=$RebootRequired;restored=$Restored}}
+    $event=[ordered]@{schema=$KxmTelemetrySchema;kx_version=$KxmClientVersion;event=$EventName;timestamp_utc=(Get-Date).ToUniversalTime().ToString('o');hardware=(Get-KxmCoarseHardware $Hardware);target=[ordered]@{emulator=$Emulator;emulator_version=$EmulatorVersion;game=$Game;profile=$Profile};changes=@($Changes);result=[ordered]@{success=$Success;reboot_required=$RebootRequired;restored=$Restored}}
     if($WindowsBuildTier){$event.hardware.windows_build_tier=$WindowsBuildTier}
     if($Benchmark){$event.result.benchmark=$Benchmark}
     return [pscustomobject]$event
