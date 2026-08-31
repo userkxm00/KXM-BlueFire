@@ -1,0 +1,32 @@
+# Local editor files
+.vscode/
+.idea/
+*.user
+*.suo
+
+# PowerShell / Windows local artifacts
+*.log
+*.tmp
+*.bak
+
+# KXM runtime state (never commit user machine data)
+CURRENT_BASELINE.txt
+ACTIVE_SESSION.xml
+LAST_SESSION.xml
+preferences.json
+Community/events.jsonl
+Telemetry/queue.jsonl
+Telemetry/telemetry.json
+Backups/
+Sessions/
+Logs/
+ExportedProfiles/
+
+# Secrets / local environment files
+.env
+.env.*
+!.env.example
+
+# Build / test output
+TestResults/
+coverage/
