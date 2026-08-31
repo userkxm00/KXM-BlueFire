@@ -1,4 +1,4 @@
-# KXM BlueFire v26
+# KXM BlueFire v1.0.0 RC1
 
 **Hardware-aware Windows gaming performance platform for BlueStacks / Free Fire.**
 
@@ -14,7 +14,7 @@ This repository is the **public Windows client** for KXM BlueFire.
 
 The public client contains no privileged Supabase secret and no private dashboard/server implementation.
 
-## v26 RC1 highlights
+## v1.0.0 RC1 highlights
 
 - **Recovery-first baseline**: persistent changes use a baseline snapshot stored under `C:\ProgramData\KXM\BlueFire\Backups\` before changes.
 - **Restore Original**: restores captured registry values, removes values that were absent before KXM, restores captured service state, and returns to the original power plan when it still exists.
@@ -28,6 +28,10 @@ The public client contains no privileged Supabase secret and no private dashboar
 - **Profile export**: portable JSON profile snapshots.
 - **Community telemetry**: OFF by default, coarse and privacy-first, with a local queue and explicit opt-in.
 - **English / Arabic / French** UI with Arabic RTL.
+
+## Engine build
+
+The public product version is **v1.0.0-rc.1**. The internal engine build lineage remains **26.0** for development traceability.
 
 ## Recommendation model
 
@@ -105,11 +109,11 @@ A release is not considered stable solely because CI is green. Real-device compa
 
 ## Release status
 
-**v26.0-rc.1 — Release Candidate**
+**v1.0.0-rc.1 — Release Candidate**
 
-This is a pre-release build. It is intended for compatibility testing and controlled feedback, not as a claim that every Windows configuration is supported.
+This is the first public KXM version line. It is intended for compatibility testing and controlled feedback, not as a claim that every Windows configuration is supported.
 
-Before a stable release, validate real devices across:
+Before `v1.0.0` stable, validate real devices across:
 
 - Intel / AMD CPUs
 - integrated / discrete graphics
