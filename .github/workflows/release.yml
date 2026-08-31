@@ -34,10 +34,60 @@ jobs:
           }
           if ($failed) { exit 1 }
 
+      - name: Install PSScriptAnalyzer
+        shell: powershell
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+
+      - name: Run PSScriptAnalyzer
+        shell: powershell
+        run: |
+          $errors = @()
+          foreach ($file in @(Get-ChildItem -Path . -Filter '*.ps1' -File -Recurse)) {
+            $errors += @(Invoke-ScriptAnalyzer -Path $file.FullName -Severity Error)
+          }
+          if ($errors.Count -gt 0) {
+            $errors | Format-Table -AutoSize | Out-String | Write-Host
+            exit 1
+          }
+
+      - name: Validate launcher and required runtime files
+        shell: powershell
+        run: |
+          $bat = Get-Content .\KXM_BLUEFIRE.bat -Raw
+          if ($bat -notmatch 'KXM_BLUEFIRE\.ps1') { throw 'Launcher does not target KXM_BLUEFIRE.ps1' }
+          foreach ($file in @('KXM_LANG.json','KXM_TELEMETRY.ps1','KXM_SUPABASE_CONFIG.json','KXM_CONFIG.ini','LICENSE','README.md')) {
+            if (-not (Test-Path $file)) { throw "Missing required release file: $file" }
+          }
+
+      - name: Run regression tests
+        shell: powershell
+        run: .\tests\KXM.BlueFire.Tests.ps1
+
+      - name: Validate no secrets are tracked
+        shell: powershell
+        run: |
+          $files = Get-ChildItem -Path . -File -Recurse -Force | Where-Object { $_.FullName -notmatch '\\.git\\' }
+          foreach ($file in $files) {
+            if ($file.Extension -in @('.ps1','.json','.ini','.md','.yml','.yaml','.bat','.txt')) {
+              $text = Get-Content -LiteralPath $file.FullName -Raw -ErrorAction SilentlyContinue
+              if ($text -match 'sb_secret_[A-Za-z0-9_-]+') { throw "Supabase secret detected in $($file.FullName)" }
+            }
+          }
+          if (Test-Path '.env') { throw '.env must never be tracked' }
+
+      - name: Verify release version markers
+        shell: powershell
+        run: |
+          $versionFile = (Get-Content VERSION -Raw).Trim()
+          if ($versionFile -notmatch '^\d+\.\d+\.\d+-(rc\.\d+|beta\.\d+|alpha\.\d+)$') { throw "Invalid VERSION: $versionFile" }
+          $tag = '${{ github.ref_name }}'
+          if ($tag -ne ('v' + $versionFile)) { throw "Tag $tag does not match VERSION $versionFile" }
+
       - name: Build runtime package
         shell: powershell
         run: |
           $tag = '${{ github.ref_name }}'
+          $versionFile = (Get-Content VERSION -Raw).Trim()
           $root = Join-Path $env:RUNNER_TEMP "KXM-BlueFire-$tag"
           $zip = Join-Path $env:GITHUB_WORKSPACE "KXM-BlueFire-$tag.zip"
           if (Test-Path $root) { Remove-Item $root -Recurse -Force }
@@ -60,7 +110,10 @@ jobs:
           }
 
           $manifest = [ordered]@{
+            product = 'KXM BlueFire'
             tag = $tag
+            version = $versionFile
+            engine_build = '26.0'
             commit = '${{ github.sha }}'
             generated_utc = (Get-Date).ToUniversalTime().ToString('o')
             runtime_files = $files
@@ -71,31 +124,50 @@ jobs:
           $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zip).Hash.ToLowerInvariant()
           "$hash  $(Split-Path $zip -Leaf)" | Set-Content (Join-Path $env:GITHUB_WORKSPACE 'SHA256SUMS.txt') -Encoding ASCII
 
-      - name: Create GitHub release and upload assets
+      - name: Publish or update GitHub release
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $tag = '${{ github.ref_name }}'
           $zip = "KXM-BlueFire-$tag.zip"
+          $pre = $tag -match '-(rc|beta|alpha)\.'
           $notes = @"
           # KXM BlueFire $tag
 
-          Release candidate generated from the exact tagged source.
+          Release generated from the exact tagged source after Windows PowerShell 5.1 syntax validation, PSScriptAnalyzer, regression tests, version checks, launcher validation, and secret scanning.
+
+          ## Included
+          - Hardware-aware recommendations
+          - Recovery-first baseline and Restore path
+          - GAME READY session handling and Undo Last Session
+          - Thermal, driver, reboot, network, and PresentMon diagnostics
+          - Privacy-first opt-in community telemetry
+          - English, Arabic, and French support
 
           ## Safety
-          - Recovery-first baseline before persistent changes.
-          - Restore capability is part of the release path.
-          - Community telemetry is OFF by default.
-          - No intentionally disabled Defender or Windows Update.
-          - No game-file modification, DLL injection, or anti-cheat bypass.
+          - No intentional Defender disablement
+          - No intentional Windows Update disablement
+          - No pagefile disablement
+          - No game-file modification
+          - No DLL injection or anti-cheat bypass
 
           ## Compatibility
           - Windows 10 / Windows 11
           - Windows PowerShell 5.1
           - Administrator rights for system-changing operations
 
-          This release is a candidate for compatibility testing. It does not guarantee FPS improvement on every system.
+          Performance results vary by hardware and configuration. This release does not guarantee FPS improvement.
           "@
           Set-Content -Path release-notes.md -Value $notes -Encoding UTF8
-          gh release create $tag $zip SHA256SUMS.txt --title "KXM BlueFire $tag" --notes-file release-notes.md --prerelease
+
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $zip SHA256SUMS.txt --clobber
+            if ($pre) { gh release edit $tag --prerelease --title "KXM BlueFire $tag" --notes-file release-notes.md }
+            else { gh release edit $tag --title "KXM BlueFire $tag" --notes-file release-notes.md }
+          } else {
+            $args = @('release','create',$tag,$zip,'SHA256SUMS.txt','--title',"KXM BlueFire $tag",'--notes-file','release-notes.md')
+            if ($pre) { $args += '--prerelease' }
+            & gh @args
+          }
