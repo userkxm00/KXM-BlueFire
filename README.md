@@ -6,9 +6,13 @@
 
 ## Repositories
 
-This is the **public Windows client** repository.
+This repository is the **public Windows client** for KXM BlueFire.
 
-The companion website, private admin dashboard, community analytics and privileged server-side integration live separately in **KXM-BlueFire-Web-**.
+- **Client:** `userkxm00/KXM-BlueFire`
+- **Web / Admin / Backend:** `userkxm00/KXM-BlueFire-Web-` (private)
+- **Project website:** served from the private web repository via Vercel
+
+The public client contains no privileged Supabase secret and no private dashboard/server implementation.
 
 ## v25 highlights
 
@@ -60,7 +64,7 @@ This is configuration recovery, **not** a full disk image.
 
 ## Community data
 
-Community sharing is **OFF by default**. Only coarse hardware classes and operation outcomes are intended to be collected. The public client contains no privileged Supabase secret. Online sending is mediated by the project backend.
+Community sharing is **OFF by default**. Only coarse hardware classes and operation outcomes are intended to be collected. The public client contains no privileged Supabase secret. Online sending is mediated by the private project backend.
 
 ## Compatibility
 
