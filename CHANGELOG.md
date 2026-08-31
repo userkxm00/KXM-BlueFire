@@ -1,37 +1,59 @@
 # Changelog
 
-## v26.0 - Recovery hardening / truthful diagnostics
+## v26.0-rc.1 - Recovery hardening and truthful diagnostics
 
-- Implemented RestoreBaseline using the stored baseline snapshot.
-- Restores captured registry values, absent values, service startup/state, and the original active power plan.
+### Recovery
+
+- Implemented `RestoreBaseline` using the stored baseline snapshot.
+- Restores captured Registry values and removes tracked values that were absent before KXM.
+- Restores tracked service startup mode and running state.
+- Restores the original active power plan when it still exists.
 - Removes the KXM-created Maximum FPS power plan during baseline restore when applicable.
-- Added deterministic session snapshots for power state and BlueStacks process priority.
-- Improved Undo Last Session to restore the saved session state instead of only the power plan.
+- Writes an explicit restore result to the baseline directory.
 - Added an optional Windows System Restore point attempt before persistent changes, with an explicit availability result.
-- Replaced the placeholder network-latency screen with real gateway/public ping and jitter diagnostics.
-- Kept FPS and frame-time reporting truthful: PresentMon presence is reported, but no synthetic FPS numbers are generated.
-- Unified community telemetry through KXM_TELEMETRY.ps1 when the user explicitly opts in.
-- Removed the duplicate in-core community telemetry path from the intended flow.
-- Added hardware-aware recommendation rules for CPU, RAM, storage, and SysMain behavior.
-- Tightened error handling around critical operations while keeping safe fallbacks for optional diagnostics.
-- Replaced the diagnostic-button closure pattern with explicit per-button closures to avoid shared-loop state bugs.
-- Added Windows PowerShell 5.1 parser validation and PSScriptAnalyzer validation to CI.
-- Added regression tests for hardware recommendations and deterministic registry restore behavior.
-- Updated the launcher to identify the v26 engine.
 
-## v25.0 - Reliability / Measurement release candidate
+### Session safety
 
-- Hardened GAME READY session lifecycle.
-- Added Undo Last Session.
-- Added thermal telemetry with safe UNKNOWN fallback.
-- Added display-driver health inspection.
-- Added Windows Update drift and pending-reboot checks.
-- Added dynamic Free Fire profile metadata and profile export.
-- Added network latency / jitter diagnostics foundation.
-- Added benchmark snapshot and PresentMon detection.
-- Added conflict/dependency checks.
-- Added privacy-first local Community Insights and opt-in evidence events.
-- Added issue templates and expanded project documentation.
+- Added deterministic GAME READY session snapshots.
+- Stores the original active power plan and BlueStacks process priority when available.
+- `UNDO LAST SESSION` restores the stored session state.
+- Session cleanup remains limited to temporary files and DNS cache flushing.
+
+### Hardware intelligence
+
+- Recommendations now use CPU cores, logical processors, physical RAM, and storage class.
+- SysMain remains `KEEP AUTO` for HDD systems and systems with 8 GB RAM or less.
+- BlueStacks CPU/RAM guidance scales down on smaller systems instead of forcing a fixed allocation.
+- 120 FPS is treated as guidance and 240 FPS as an optional ceiling, never as a rendered-FPS guarantee.
+
+### Diagnostics
+
+- Thermal Guard reports available ACPI thermal telemetry or `UNKNOWN` without fabricating readings.
+- Driver Health reports display-driver provider, version, and date where available.
+- Windows Update resilience reports pending reboot state and tracked configuration drift.
+- Network diagnostics perform gateway/public endpoint ping samples and report average, minimum, maximum, and jitter.
+- PresentMon is detected when available; KXM does not invent frame-time or FPS data.
+- Conflict checks cover common Discord, RTSS, and Hyper-V style conflicts.
+
+### Community telemetry
+
+- Unified the intended telemetry path through `KXM_TELEMETRY.ps1`.
+- Community sharing remains OFF by default and requires explicit opt-in.
+- Telemetry uses coarse hardware classes and operation outcomes only.
+- Local queueing and retry behavior are retained for transient connectivity failures.
+
+### Quality
+
+- Added Windows PowerShell 5.1 syntax validation in GitHub Actions.
+- Added PSScriptAnalyzer validation.
+- Added launcher-target validation.
+- Added regression tests for hardware recommendation rules and deterministic Registry restore behavior.
+- Replaced shared loop-state diagnostics handlers with explicit closures.
+- Hardened critical error handling and logging.
+
+## v25.0
+
+Previous reliability and measurement release candidate. Superseded by v26.0-rc.1.
 
 ## v24.0
 
