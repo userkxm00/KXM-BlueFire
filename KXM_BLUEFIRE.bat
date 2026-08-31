@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title KXM // BLUEFIRE v25
+title KXM // BLUEFIRE v26
 color 0A
 
 fltmc >nul 2>&1
