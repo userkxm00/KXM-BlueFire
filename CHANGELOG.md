@@ -1,12 +1,13 @@
 # Changelog
 
-## v13.0
-- Added a stable PowerShell 5.1 engine: `KXM_BLUEFIRE_V13.ps1`.
-- Launcher now points explicitly to the v13 engine.
-- Durable baseline remains outside the portable application folder.
-- Baseline captures KXM-owned Registry values, selected service state, selected TCP values, BlueStacks GPU preference, active power scheme, BCD export, and a Windows Restore Point attempt.
-- Restore Center restores captured pre-KXM values.
-- Hardware-aware recommendations remain part of the standard workflow.
-- Recommended and Competitive profiles remain separate.
-- Experimental options remain opt-in.
-- English / العربية / Français remain supported.
+## v24.0 — Official Community Release candidate
+- Established v24 as the single user-facing engine on `main`.
+- Added/kept GAME READY session workflow.
+- Added/kept hardware-aware detection and Free Fire recommendations.
+- Added/kept recovery baseline and restore workflow.
+- Added/kept conflict checks, reboot status and benchmark snapshots.
+- Kept experimental settings separate from the normal gaming path.
+- Removed obsolete v13-v23 engine files from the main user-facing tree.
+
+## Development history
+Earlier experimental builds remain available through Git history when needed for auditing or development. They are not shipped from `main`.
