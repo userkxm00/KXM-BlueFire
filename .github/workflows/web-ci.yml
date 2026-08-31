@@ -1,0 +1,50 @@
+name: KXM PowerShell CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  powershell-validation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate PowerShell 5.1 syntax
+        shell: powershell
+        run: |
+          $errors = $null
+          [void][System.Management.Automation.Language.Parser]::ParseFile('KXM_BLUEFIRE.ps1',[ref]$null,[ref]$errors)
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Host ("Line {0}: {1}" -f $_.Extent.StartLineNumber,$_.Message) }
+            exit 1
+          }
+
+      - name: Install PSScriptAnalyzer
+        shell: powershell
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+
+      - name: Run PSScriptAnalyzer
+        shell: powershell
+        run: |
+          $result = Invoke-ScriptAnalyzer -Path KXM_BLUEFIRE.ps1 -Severity Error
+          if ($result) {
+            $result | Format-Table -AutoSize | Out-String | Write-Host
+            exit 1
+          }
+
+      - name: Validate launcher targets
+        shell: powershell
+        run: |
+          $bat = Get-Content .\KXM_BLUEFIRE.bat -Raw
+          if ($bat -notmatch 'KXM_BLUEFIRE\.ps1') { throw 'Launcher does not target KXM_BLUEFIRE.ps1' }
+          if (-not (Test-Path .\KXM_LANG.json)) { throw 'Missing KXM_LANG.json' }
+          if (-not (Test-Path .\KXM_TELEMETRY.ps1)) { throw 'Missing KXM_TELEMETRY.ps1' }
+
+      - name: Run pure recommendation tests
+        shell: powershell
+        env:
+          KXM_TEST_MODE: '1'
+        run: .\tests\KXM.BlueFire.Tests.ps1
