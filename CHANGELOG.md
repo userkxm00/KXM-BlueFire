@@ -1,13 +1,12 @@
 # Changelog
 
-## v12.0
-- Recovery-first architecture.
-- Durable pre-change baseline stored under Windows ProgramData.
-- Restore Center.
-- Hardware-aware recommendations.
-- Recommended and Competitive profiles.
-- BlueStacks-focused tuning.
-- Network, storage, background and experimental modules.
-- Benchmark and Verify tools.
-- English / العربية / Français support.
-- Windows PowerShell 5.1-compatible syntax and launcher parser gate.
+## v13.0
+- Added a stable PowerShell 5.1 engine: `KXM_BLUEFIRE_V13.ps1`.
+- Launcher now points explicitly to the v13 engine.
+- Durable baseline remains outside the portable application folder.
+- Baseline captures KXM-owned Registry values, selected service state, selected TCP values, BlueStacks GPU preference, active power scheme, BCD export, and a Windows Restore Point attempt.
+- Restore Center restores captured pre-KXM values.
+- Hardware-aware recommendations remain part of the standard workflow.
+- Recommended and Competitive profiles remain separate.
+- Experimental options remain opt-in.
+- English / العربية / Français remain supported.
