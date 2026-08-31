@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "description": "Privacy-minimized, opt-in KXM community outcome event",
+  "required": ["schema", "kx_version", "event", "hardware", "target", "result"],
+  "properties": {
+    "schema": {"type":"integer"},
+    "kx_version": {"type":"string"},
+    "event": {"type":"string","enum":["optimization_result","game_ready","restore_result","benchmark"]},
+    "hardware": {
+      "type":"object",
+      "properties": {
+        "cpu_vendor":{"type":"string"},
+        "cpu_family":{"type":"string"},
+        "logical_processors":{"type":"integer"},
+        "ram_tier_gb":{"type":"integer"},
+        "gpu_vendor":{"type":"string"},
+        "gpu_tier":{"type":"string"},
+        "storage_class":{"type":"string"}
+      }
+    },
+    "target": {
+      "type":"object",
+      "properties": {
+        "emulator":{"type":"string"},
+        "game":{"type":"string"},
+        "profile":{"type":"string"}
+      }
+    },
+    "result": {
+      "type":"object",
+      "properties": {
+        "success":{"type":"boolean"},
+        "reboot_required":{"type":"boolean"},
+        "restored":{"type":"boolean"},
+        "benchmark":{"type":"object"}
+      }
+    }
+  }
+}
