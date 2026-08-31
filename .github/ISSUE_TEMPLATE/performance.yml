@@ -1,0 +1,27 @@
+name: Performance report
+description: Share a measured before/after result
+title: "[Performance] "
+body:
+  - type: markdown
+    attributes:
+      value: "Prefer frame-time/1% low measurements. Do not include personal identifiers."
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware
+      description: CPU, RAM tier, GPU, storage class, Windows build and BlueStacks version.
+    validations:
+      required: true
+  - type: textarea
+    id: profile
+    attributes:
+      label: KXM profile and changes
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Before / after measurements
+      description: Include average FPS only when measured, plus frame-time or 1% low when available.
+    validations:
+      required: true
